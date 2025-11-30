@@ -169,17 +169,14 @@ import Layout from '../layouts/Layout.astro';
         </div>
 
         <div class="relative">
-          <!-- Placeholder for photo - using styled div -->
-          <div class="aspect-[4/5] bg-gradient-to-br from-charcoal-800 to-charcoal-700 rounded-lg overflow-hidden relative">
-            <div class="absolute inset-0 flex items-center justify-center">
-              <div class="text-center">
-                <div class="w-32 h-32 rounded-full bg-charcoal-600 mx-auto mb-4 flex items-center justify-center">
-                  <span class="text-4xl font-display font-bold text-stone-400">JK</span>
-                </div>
-                <p class="text-stone-500 text-sm">Jan Kutschera</p>
-                <p class="text-stone-600 text-xs">Photo coming soon</p>
-              </div>
-            </div>
+          <div class="aspect-[4/5] rounded-lg overflow-hidden relative">
+            <img
+              src="/jan-kutschera.png"
+              alt="Jan Kutschera - ADHD Founder"
+              class="w-full h-full object-cover object-top"
+            />
+            <!-- Subtle overlay for consistency with dark theme -->
+            <div class="absolute inset-0 bg-gradient-to-t from-charcoal-900/40 via-transparent to-transparent"></div>
             <!-- Decorative elements -->
             <div class="absolute -bottom-4 -right-4 w-32 h-32 border border-copper-500/30 rounded-lg"></div>
             <div class="absolute -top-4 -left-4 w-24 h-24 border border-forest-600/30 rounded-lg"></div>
