@@ -1,0 +1,251 @@
+/* Google Fonts - must be first */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@import "tailwindcss";
+
+/* ============================================
+   ADHD FOUNDER - Design System
+   Inspired by Becki & Chris aesthetic
+   "German Engineering for the ADHD Brain"
+   ============================================ */
+
+/* ============================================
+   CSS Custom Properties (Design Tokens)
+   ============================================ */
+
+@theme {
+  /* Color Palette - Dark Mode Base (Becki & Chris style) */
+  --color-charcoal-950: #0a0a0a;
+  --color-charcoal-900: #141414;
+  --color-charcoal-800: #1f1f1f;
+  --color-charcoal-700: #2d2d2d;
+  --color-charcoal-600: #404040;
+  --color-charcoal-500: #525252;
+
+  /* Warm Stone (Earthy Tones) */
+  --color-stone-50: #faf8f5;
+  --color-stone-100: #f5f2ed;
+  --color-stone-200: #e8e0d5;
+  --color-stone-300: #d4c8b8;
+  --color-stone-400: #b8a890;
+  --color-stone-500: #9c8b70;
+
+  /* Forest (Moody Nature Tones) */
+  --color-forest-700: #3d4d3d;
+  --color-forest-600: #4a5d4a;
+  --color-forest-500: #5a6f5a;
+  --color-forest-400: #6b8060;
+
+  /* Copper (German Engineering Premium) */
+  --color-copper-600: #a65f28;
+  --color-copper-500: #b87333;
+  --color-copper-400: #cd8544;
+  --color-copper-300: #daa06d;
+
+  /* Typography */
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+/* ============================================
+   Base Styles
+   ============================================ */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-charcoal-900);
+  color: var(--color-stone-100);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: var(--color-copper-500);
+  color: var(--color-charcoal-950);
+}
+
+/* ============================================
+   Typography Utilities
+   ============================================ */
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+.headline-xl {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.headline-lg {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  letter-spacing: 0.02em;
+  line-height: 1.15;
+}
+
+.headline-md {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+}
+
+.headline-sm {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.125rem, 2vw, 1.5rem);
+  letter-spacing: 0.01em;
+  line-height: 1.3;
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-copper-400);
+}
+
+/* ============================================
+   Components
+   ============================================ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 2rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.875rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 0.25rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--color-copper-500) 0%, var(--color-copper-400) 100%);
+  color: var(--color-charcoal-950);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--color-copper-400) 0%, var(--color-copper-300) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px -10px rgba(205, 133, 68, 0.4);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--color-stone-100);
+  border: 1px solid var(--color-charcoal-600);
+}
+
+.btn-secondary:hover {
+  border-color: var(--color-stone-400);
+  background: var(--color-charcoal-800);
+}
+
+.card {
+  background: var(--color-charcoal-800);
+  border: 1px solid var(--color-charcoal-700);
+  border-radius: 0.5rem;
+  padding: 2rem;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  border-color: var(--color-charcoal-600);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.5);
+}
+
+.divider {
+  width: 4rem;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-copper-500), transparent);
+}
+
+/* Grid pattern overlay */
+.grid-pattern {
+  background-image:
+    linear-gradient(rgba(64, 64, 64, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(64, 64, 64, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* ============================================
+   Animations
+   ============================================ */
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-fade-in {
+  animation: fade-in 1s ease-out forwards;
+  opacity: 0;
+}
+
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-400 { animation-delay: 0.4s; }
+.delay-500 { animation-delay: 0.5s; }
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-charcoal-900);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-charcoal-600);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-charcoal-500);
+}
