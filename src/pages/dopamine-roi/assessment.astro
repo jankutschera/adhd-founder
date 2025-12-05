@@ -236,7 +236,11 @@ const totalSteps = questions.length + 1; // +1 for email capture
 
   .navigation-wrapper {
     padding: 1.5rem 0;
-    margin-top: auto;
+    margin-top: 2rem;
+  }
+
+  .navigation-wrapper.hidden {
+    display: none;
   }
 
   /* Mobile optimizations */
@@ -265,8 +269,24 @@ const totalSteps = questions.length + 1; // +1 for email capture
 
   const STORAGE_KEY = 'dopamine-roi-assessment';
 
+  // Check for restart parameter in URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const shouldRestart = urlParams.get('restart') === 'true';
+
   // Load saved state or initialize
   function loadState(): AssessmentState {
+    // If restart requested, clear saved state
+    if (shouldRestart) {
+      localStorage.removeItem(STORAGE_KEY);
+      // Clean URL without reload
+      window.history.replaceState({}, '', window.location.pathname);
+      return {
+        currentStep: 1,
+        answers: {},
+        email: ''
+      };
+    }
+
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       try {
@@ -371,6 +391,18 @@ const totalSteps = questions.length + 1; // +1 for email capture
   }
 
   function updateNavigation() {
+    const navigationWrapper = document.querySelector('.navigation-wrapper') as HTMLElement;
+
+    // Hide navigation entirely on email step (step 8) - it has its own submit button
+    if (navigationWrapper) {
+      if (state.currentStep === totalSteps) {
+        navigationWrapper.classList.add('hidden');
+        return; // No need to update other elements
+      } else {
+        navigationWrapper.classList.remove('hidden');
+      }
+    }
+
     // Back button
     if (backButton) {
       if (state.currentStep === 1) {
@@ -386,20 +418,17 @@ const totalSteps = questions.length + 1; // +1 for email capture
       skipButton.style.display = optionalSteps.includes(state.currentStep) ? 'block' : 'none';
     }
 
-    // Next button
+    // Next button label
     if (nextButton) {
-      const buttonText = nextButton.querySelector('.button-text');
-      if (state.currentStep === totalSteps) {
-        if (buttonText) buttonText.textContent = 'See My Results';
-      } else if (state.currentStep === 1) {
+      const buttonText = nextButton.querySelector('span');
+      if (state.currentStep === 1) {
         if (buttonText) buttonText.textContent = "Let's Go";
       } else {
         if (buttonText) buttonText.textContent = 'Continue';
       }
 
-      // Disable if required answer not provided
-      const isAnswered = isCurrentStepAnswered();
-      nextButton.disabled = !isAnswered && state.currentStep === totalSteps; // Only enforce on email step
+      // Disable if required answer not provided (but allow progression on most steps)
+      nextButton.disabled = false;
     }
   }
 

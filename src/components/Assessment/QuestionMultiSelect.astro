@@ -230,9 +230,14 @@ const { id, title, subtitle, options, selected = [], minSelect = 1, maxSelect = 
     }
 
     chips.forEach(chip => {
+      const checkbox = chip.querySelector('input[type="checkbox"]') as HTMLInputElement;
+
+      // Prevent default label-checkbox behavior and handle manually
       chip.addEventListener('click', (e) => {
+        // Prevent the default checkbox toggle from the label click
+        e.preventDefault();
+
         if (chip.classList.contains('disabled')) {
-          e.preventDefault();
           return;
         }
 
@@ -242,6 +247,11 @@ const { id, title, subtitle, options, selected = [], minSelect = 1, maxSelect = 
         // Toggle if deselecting or if not at max
         if (isSelected || selectedCount < maxSelect) {
           chip.classList.toggle('selected');
+
+          // Sync checkbox state
+          if (checkbox) {
+            checkbox.checked = chip.classList.contains('selected');
+          }
 
           // Haptic feedback
           if ('vibrate' in navigator) {
