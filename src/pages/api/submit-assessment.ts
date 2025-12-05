@@ -4,6 +4,99 @@ import { calculateScore, getScoreBreakdown } from '../../lib/scoring';
 import { getCategoryByScore } from '../../lib/categories';
 import { nanoid } from 'nanoid';
 
+// Kit.com (ConvertKit) v4 API integration
+async function subscribeToKit(email: string, score: number, categoryId: string) {
+  const kitApiKey = import.meta.env.KIT_API_KEY;
+
+  if (!kitApiKey) {
+    console.warn('KIT_API_KEY not configured - skipping Kit subscription');
+    return;
+  }
+
+  // Map category IDs to Kit tag names
+  const categoryTagMap: Record<string, string> = {
+    'cash-engine': 'dopamine-roi-cash-engine',
+    'delegate-zone': 'dopamine-roi-delegate-zone',
+    'kill-zone': 'dopamine-roi-kill-zone',
+    'profitable-chaos': 'dopamine-roi-profitable-chaos',
+  };
+
+  try {
+    // Step 1: Create/update subscriber with custom field
+    const subscriberResponse = await fetch('https://api.kit.com/v4/subscribers', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${kitApiKey}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({
+        email_address: email,
+        fields: {
+          dopamine_roi_score: score.toString(),
+        },
+      }),
+    });
+
+    if (!subscriberResponse.ok) {
+      const error = await subscriberResponse.text();
+      console.error('Kit subscriber error:', error);
+      return;
+    }
+
+    const subscriberData = await subscriberResponse.json();
+    const subscriberId = subscriberData.subscriber?.id;
+
+    if (!subscriberId) {
+      console.error('Kit: No subscriber ID returned');
+      return;
+    }
+
+    // Step 2: Add source tag (dopamine-roi)
+    // Note: You need to get the tag ID from Kit dashboard or use tag name endpoint
+    // For now, we'll use the tag endpoint that accepts subscriber email
+    const sourceTagResponse = await fetch('https://api.kit.com/v4/tags/dopamine-roi/subscribers', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${kitApiKey}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({
+        email_address: email,
+      }),
+    });
+
+    if (!sourceTagResponse.ok) {
+      console.warn('Kit: Could not add source tag (may need to create it first)');
+    }
+
+    // Step 3: Add category tag
+    const categoryTag = categoryTagMap[categoryId];
+    if (categoryTag) {
+      const categoryTagResponse = await fetch(`https://api.kit.com/v4/tags/${categoryTag}/subscribers`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${kitApiKey}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          email_address: email,
+        }),
+      });
+
+      if (!categoryTagResponse.ok) {
+        console.warn(`Kit: Could not add category tag ${categoryTag}`);
+      }
+    }
+
+    console.log(`Kit: Successfully subscribed ${email} with score ${score} and category ${categoryId}`);
+  } catch (err) {
+    console.error('Kit subscription error:', err);
+  }
+}
+
 // Email sending via Resend
 async function sendResultsEmail(email: string, score: number, category: any, referralCode: string) {
   const resendApiKey = import.meta.env.RESEND_API_KEY;
@@ -148,8 +241,11 @@ export const POST: APIRoute = async ({ request }) => {
       console.warn('Supabase not configured - assessment not saved to database');
     }
 
-    // Send results email (non-blocking)
+    // Send results email via Resend (non-blocking)
     sendResultsEmail(email, score, category, referralCode).catch(console.error);
+
+    // Subscribe to Kit.com for nurture sequences (non-blocking)
+    subscribeToKit(email, score, category.id).catch(console.error);
 
     return new Response(
       JSON.stringify({
