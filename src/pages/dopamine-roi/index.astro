@@ -1,0 +1,776 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+// Check for referral code in URL
+const referredBy = Astro.url.searchParams.get('ref');
+---
+
+<Layout
+  title="Dopamine ROI Calculator"
+  description="Discover which business activities give you energy vs. drain you. A 2-minute assessment for ADHD entrepreneurs."
+  image="/dopamine-roi-og.jpg"
+>
+  <main class="landing-page">
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="badge-icon">🧠</span>
+          <span>2-Minute Assessment</span>
+        </div>
+
+        <h1 class="hero-title">
+          Calculate Your<br />
+          <span class="highlight">Dopamine ROI</span>
+        </h1>
+
+        <p class="hero-subtitle">
+          Discover which business activities give you energy vs. drain you.<br />
+          Built for ADHD entrepreneurs who want to work <em>with</em> their brain, not against it.
+        </p>
+
+        <a href="/dopamine-roi/assessment" class="cta-button">
+          <span class="button-text">Start the Assessment</span>
+          <span class="button-icon">→</span>
+        </a>
+
+        <div class="social-proof">
+          <div class="avatars">
+            <span class="avatar">👩‍💼</span>
+            <span class="avatar">👨‍💻</span>
+            <span class="avatar">👩‍🔬</span>
+            <span class="avatar">👨‍🎨</span>
+          </div>
+          <span class="proof-text">
+            <strong>2,847+</strong> ADHD founders have taken the quiz
+          </span>
+        </div>
+      </div>
+
+      <!-- Floating Elements -->
+      <div class="hero-decoration">
+        <div class="float-card card-1">
+          <span class="card-emoji">⚡</span>
+          <span class="card-label">Flow State</span>
+        </div>
+        <div class="float-card card-2">
+          <span class="card-emoji">🔥</span>
+          <span class="card-label">High Energy</span>
+        </div>
+        <div class="float-card card-3">
+          <span class="card-emoji">💡</span>
+          <span class="card-label">Strategy</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- What You'll Learn Section -->
+    <section class="learn-section">
+      <h2 class="section-title">What You'll Discover</h2>
+
+      <div class="learn-grid">
+        <div class="learn-card">
+          <div class="learn-icon">📊</div>
+          <h3>Your Dopamine ROI Score</h3>
+          <p>A clear metric showing how efficiently you're converting mental energy into business value.</p>
+        </div>
+
+        <div class="learn-card">
+          <div class="learn-icon">🎯</div>
+          <h3>Your Entrepreneur Type</h3>
+          <p>One of four categories that reveals your unique pattern: Cash Engine, Delegate Zone, Kill Zone, or Profitable Chaos.</p>
+        </div>
+
+        <div class="learn-card">
+          <div class="learn-icon">🗺️</div>
+          <h3>Personalized Action Plan</h3>
+          <p>Specific recommendations based on YOUR answers, not generic ADHD advice.</p>
+        </div>
+
+        <div class="learn-card">
+          <div class="learn-icon">⚡</div>
+          <h3>Energy Vampires & Flow Triggers</h3>
+          <p>Identify which tasks drain you and which ones light you up.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Categories Preview -->
+    <section class="categories-section">
+      <h2 class="section-title">The Four Founder Types</h2>
+      <p class="section-subtitle">Which one are you?</p>
+
+      <div class="categories-grid">
+        <div class="category-preview" style="--cat-color: #10B981">
+          <div class="category-score">70-100</div>
+          <h3>Cash Engine</h3>
+          <p>You've cracked the code. Your brain works with your business, not against it.</p>
+        </div>
+
+        <div class="category-preview" style="--cat-color: #3B82F6">
+          <div class="category-score">40-69</div>
+          <h3>Delegate Zone</h3>
+          <p>You're close! A few key changes could unlock massive efficiency gains.</p>
+        </div>
+
+        <div class="category-preview" style="--cat-color: #F59E0B">
+          <div class="category-score">20-39</div>
+          <h3>Kill Zone</h3>
+          <p>You're working hard, but against your natural grain. Time for a systems overhaul.</p>
+        </div>
+
+        <div class="category-preview" style="--cat-color: #EF4444">
+          <div class="category-score">0-19</div>
+          <h3>Profitable Chaos</h3>
+          <p>Making money despite yourself! Imagine what you could do with better alignment.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-section">
+      <h2 class="section-title">How It Works</h2>
+
+      <div class="steps-container">
+        <div class="step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h3>Answer 7 Quick Questions</h3>
+            <p>About your revenue, time, energy patterns, and biggest struggles.</p>
+          </div>
+        </div>
+
+        <div class="step-connector"></div>
+
+        <div class="step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h3>Get Your Score & Type</h3>
+            <p>See exactly where you fall on the Dopamine ROI spectrum.</p>
+          </div>
+        </div>
+
+        <div class="step-connector"></div>
+
+        <div class="step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h3>Receive Your Action Plan</h3>
+            <p>Personalized recommendations to optimize your entrepreneur brain.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Who This Is For -->
+    <section class="for-section">
+      <div class="for-container">
+        <div class="for-content">
+          <h2>Is This For You?</h2>
+          <p class="for-intro">This assessment is designed for ADHD entrepreneurs who:</p>
+
+          <ul class="for-list">
+            <li>
+              <span class="check">✓</span>
+              <span>Feel like they're constantly fighting their own brain</span>
+            </li>
+            <li>
+              <span class="check">✓</span>
+              <span>Have days of incredible productivity followed by burnout</span>
+            </li>
+            <li>
+              <span class="check">✓</span>
+              <span>Know they should delegate but can't let go</span>
+            </li>
+            <li>
+              <span class="check">✓</span>
+              <span>Are tired of generic productivity advice that doesn't work</span>
+            </li>
+            <li>
+              <span class="check">✓</span>
+              <span>Want to build a business that works WITH their neurodivergent brain</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="for-image">
+          <div class="image-placeholder">
+            <span class="placeholder-icon">🚀</span>
+            <span class="placeholder-text">ADHD Founders<br/>Welcome Here</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="final-cta">
+      <div class="cta-container">
+        <h2>Ready to Optimize Your Dopamine ROI?</h2>
+        <p>Takes just 2 minutes. Your brain will thank you.</p>
+
+        <a href="/dopamine-roi/assessment" class="cta-button large">
+          <span class="button-text">Calculate My Score</span>
+          <span class="button-icon">→</span>
+        </a>
+
+        <span class="cta-note">Free. No credit card. Instant results.</span>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="landing-footer">
+      <p>Built by <a href="/" class="footer-link">Jan Kutschera</a> — ADHD founder, late-diagnosed at 51</p>
+      <p class="footer-note">"Finally understanding my brain changed everything."</p>
+    </footer>
+  </main>
+
+  {referredBy && (
+    <script define:vars={{ referredBy }}>
+      // Track referral click
+      fetch(`/api/referral/${referredBy}`, { method: 'POST' }).catch(() => {});
+    </script>
+  )}
+</Layout>
+
+<style>
+  .landing-page {
+    min-height: 100vh;
+    background: var(--color-charcoal-950);
+    overflow-x: hidden;
+  }
+
+  /* Hero Section */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .hero-content {
+    max-width: 640px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-copper-400);
+    background: rgba(184, 115, 51, 0.1);
+    border: 1px solid rgba(184, 115, 51, 0.3);
+    border-radius: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .badge-icon {
+    font-size: 1rem;
+  }
+
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 8vw, 4rem);
+    font-weight: 700;
+    color: var(--color-stone-100);
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+  }
+
+  .highlight {
+    background: linear-gradient(135deg, var(--color-copper-400), var(--color-copper-500));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-subtitle {
+    font-size: 1.125rem;
+    color: var(--color-stone-400);
+    line-height: 1.7;
+    margin-bottom: 2rem;
+  }
+
+  .hero-subtitle em {
+    color: var(--color-stone-300);
+    font-style: italic;
+  }
+
+  .cta-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 2rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-charcoal-950);
+    background: var(--color-copper-500);
+    border-radius: 0.5rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(184, 115, 51, 0.3);
+  }
+
+  .cta-button:hover {
+    background: var(--color-copper-400);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(184, 115, 51, 0.4);
+  }
+
+  .cta-button.large {
+    padding: 1.25rem 2.5rem;
+    font-size: 1.25rem;
+  }
+
+  .button-icon {
+    font-size: 1.25em;
+    transition: transform 0.2s ease;
+  }
+
+  .cta-button:hover .button-icon {
+    transform: translateX(4px);
+  }
+
+  .social-proof {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 2rem;
+  }
+
+  .avatars {
+    display: flex;
+  }
+
+  .avatar {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    background: var(--color-charcoal-800);
+    border: 2px solid var(--color-charcoal-700);
+    border-radius: 50%;
+    margin-left: -8px;
+  }
+
+  .avatar:first-child {
+    margin-left: 0;
+  }
+
+  .proof-text {
+    font-size: 0.875rem;
+    color: var(--color-stone-500);
+  }
+
+  .proof-text strong {
+    color: var(--color-stone-300);
+  }
+
+  /* Floating Cards */
+  .hero-decoration {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .float-card {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: var(--color-charcoal-800);
+    border: 1px solid var(--color-charcoal-700);
+    border-radius: 0.75rem;
+    animation: float 6s ease-in-out infinite;
+    opacity: 0.7;
+  }
+
+  .card-1 {
+    top: 15%;
+    right: 10%;
+    animation-delay: 0s;
+  }
+
+  .card-2 {
+    bottom: 25%;
+    left: 8%;
+    animation-delay: -2s;
+  }
+
+  .card-3 {
+    top: 40%;
+    left: 5%;
+    animation-delay: -4s;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+  }
+
+  .card-emoji {
+    font-size: 1.25rem;
+  }
+
+  .card-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-stone-400);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Sections */
+  section {
+    padding: 4rem 1.5rem;
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--color-stone-100);
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  .section-subtitle {
+    font-size: 1rem;
+    color: var(--color-stone-500);
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  /* Learn Section */
+  .learn-section {
+    background: var(--color-charcoal-900);
+  }
+
+  .learn-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .learn-card {
+    padding: 1.5rem;
+    background: var(--color-charcoal-800);
+    border: 1px solid var(--color-charcoal-700);
+    border-radius: 1rem;
+    transition: all 0.2s ease;
+  }
+
+  .learn-card:hover {
+    border-color: var(--color-copper-600);
+    transform: translateY(-4px);
+  }
+
+  .learn-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .learn-card h3 {
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-stone-100);
+    margin-bottom: 0.5rem;
+  }
+
+  .learn-card p {
+    font-size: 0.875rem;
+    color: var(--color-stone-400);
+    line-height: 1.6;
+  }
+
+  /* Categories Section */
+  .categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .category-preview {
+    padding: 1.5rem;
+    background: var(--color-charcoal-800);
+    border: 2px solid var(--cat-color);
+    border-radius: 1rem;
+    text-align: center;
+    transition: all 0.2s ease;
+  }
+
+  .category-preview:hover {
+    transform: scale(1.02);
+  }
+
+  .category-score {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-charcoal-950);
+    background: var(--cat-color);
+    border-radius: 2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .category-preview h3 {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-stone-100);
+    margin-bottom: 0.5rem;
+  }
+
+  .category-preview p {
+    font-size: 0.875rem;
+    color: var(--color-stone-400);
+    line-height: 1.5;
+  }
+
+  /* How Section */
+  .how-section {
+    background: var(--color-charcoal-900);
+  }
+
+  .steps-container {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .step {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+  }
+
+  .step-number {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-charcoal-950);
+    background: var(--color-copper-500);
+    border-radius: 50%;
+  }
+
+  .step-content h3 {
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-stone-100);
+    margin-bottom: 0.25rem;
+  }
+
+  .step-content p {
+    font-size: 0.875rem;
+    color: var(--color-stone-400);
+  }
+
+  .step-connector {
+    width: 2px;
+    height: 40px;
+    background: var(--color-charcoal-700);
+    margin: 0.5rem 0 0.5rem 23px;
+  }
+
+  /* For Section */
+  .for-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    max-width: 900px;
+    margin: 0 auto;
+    align-items: center;
+  }
+
+  .for-content h2 {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--color-stone-100);
+    margin-bottom: 0.75rem;
+  }
+
+  .for-intro {
+    color: var(--color-stone-400);
+    margin-bottom: 1.5rem;
+  }
+
+  .for-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .for-list li {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    font-size: 0.9375rem;
+    color: var(--color-stone-300);
+  }
+
+  .check {
+    color: var(--color-forest-500);
+    font-weight: 700;
+  }
+
+  .for-image {
+    display: flex;
+    justify-content: center;
+  }
+
+  .image-placeholder {
+    width: 280px;
+    height: 280px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    background: var(--color-charcoal-800);
+    border: 2px dashed var(--color-charcoal-600);
+    border-radius: 1rem;
+  }
+
+  .placeholder-icon {
+    font-size: 4rem;
+  }
+
+  .placeholder-text {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-stone-400);
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  /* Final CTA */
+  .final-cta {
+    background: linear-gradient(180deg, var(--color-charcoal-900), var(--color-charcoal-950));
+    text-align: center;
+    padding: 5rem 1.5rem;
+  }
+
+  .cta-container {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .cta-container h2 {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-stone-100);
+    margin-bottom: 0.75rem;
+  }
+
+  .cta-container p {
+    font-size: 1.125rem;
+    color: var(--color-stone-400);
+    margin-bottom: 2rem;
+  }
+
+  .cta-note {
+    display: block;
+    margin-top: 1rem;
+    font-size: 0.875rem;
+    color: var(--color-stone-600);
+  }
+
+  /* Footer */
+  .landing-footer {
+    text-align: center;
+    padding: 2rem;
+    border-top: 1px solid var(--color-charcoal-800);
+  }
+
+  .landing-footer p {
+    font-size: 0.875rem;
+    color: var(--color-stone-500);
+    margin-bottom: 0.25rem;
+  }
+
+  .footer-link {
+    color: var(--color-copper-400);
+    text-decoration: none;
+  }
+
+  .footer-link:hover {
+    text-decoration: underline;
+  }
+
+  .footer-note {
+    font-size: 0.75rem !important;
+    color: var(--color-stone-600) !important;
+    font-style: italic;
+  }
+
+  /* Mobile Responsive */
+  @media (max-width: 768px) {
+    .hero {
+      min-height: auto;
+      padding: 4rem 1rem;
+    }
+
+    .float-card {
+      display: none;
+    }
+
+    .for-container {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .for-image {
+      order: -1;
+    }
+
+    .image-placeholder {
+      width: 200px;
+      height: 200px;
+    }
+
+    .categories-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .categories-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .cta-button.large {
+      padding: 1rem 2rem;
+      font-size: 1rem;
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>

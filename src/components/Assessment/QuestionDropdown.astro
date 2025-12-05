@@ -1,0 +1,153 @@
+---
+interface Option {
+  value: string;
+  label: string;
+}
+
+interface Props {
+  id: string;
+  title: string;
+  subtitle?: string;
+  options: Option[];
+  selected?: string;
+  placeholder?: string;
+}
+
+const { id, title, subtitle, options, selected, placeholder = 'Select an option...' } = Astro.props;
+---
+
+<div class="question-container" data-question-type="dropdown" data-question-id={id}>
+  <div class="question-header">
+    <h2 class="headline-md">{title}</h2>
+    {subtitle && <p class="subtitle">{subtitle}</p>}
+  </div>
+
+  <div class="dropdown-wrapper">
+    <select
+      id={id}
+      name={id}
+      class="dropdown-select"
+      aria-label={title}
+    >
+      <option value="" disabled selected={!selected}>{placeholder}</option>
+      {options.map((option) => (
+        <option value={option.value} selected={selected === option.value}>
+          {option.label}
+        </option>
+      ))}
+    </select>
+    <div class="dropdown-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M6 9l6 6 6-6" />
+      </svg>
+    </div>
+  </div>
+</div>
+
+<style>
+  .question-container {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .question-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .headline-md {
+    color: var(--color-stone-100);
+    margin-bottom: 0.5rem;
+  }
+
+  .subtitle {
+    color: var(--color-stone-400);
+    font-size: 1rem;
+  }
+
+  .dropdown-wrapper {
+    position: relative;
+    width: 100%;
+  }
+
+  .dropdown-select {
+    width: 100%;
+    padding: 1.25rem 3rem 1.25rem 1.25rem;
+    font-size: 1.125rem;
+    font-family: var(--font-display);
+    font-weight: 500;
+    color: var(--color-stone-100);
+    background: var(--color-charcoal-800);
+    border: 2px solid var(--color-charcoal-700);
+    border-radius: 0.75rem;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    transition: all 0.2s ease;
+  }
+
+  .dropdown-select:hover {
+    border-color: var(--color-charcoal-500);
+  }
+
+  .dropdown-select:focus {
+    outline: none;
+    border-color: var(--color-copper-500);
+    box-shadow: 0 0 0 3px rgba(184, 115, 51, 0.2);
+  }
+
+  .dropdown-select option {
+    background: var(--color-charcoal-900);
+    color: var(--color-stone-100);
+    padding: 1rem;
+  }
+
+  .dropdown-select option:disabled {
+    color: var(--color-stone-500);
+  }
+
+  .dropdown-icon {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    color: var(--color-stone-400);
+    pointer-events: none;
+    transition: transform 0.2s ease;
+  }
+
+  .dropdown-select:focus + .dropdown-icon {
+    color: var(--color-copper-400);
+  }
+
+  /* Selected state indicator */
+  .dropdown-select:not(:invalid):not([value=""]) {
+    border-color: var(--color-copper-500);
+  }
+</style>
+
+<script>
+  document.querySelectorAll('.question-container[data-question-type="dropdown"]').forEach(container => {
+    const select = container.querySelector('select') as HTMLSelectElement;
+    const questionId = container.getAttribute('data-question-id');
+
+    if (select) {
+      select.addEventListener('change', () => {
+        // Haptic feedback
+        if ('vibrate' in navigator) {
+          navigator.vibrate(15);
+        }
+
+        // Dispatch event
+        container.dispatchEvent(new CustomEvent('answer-change', {
+          bubbles: true,
+          detail: { id: questionId, value: select.value }
+        }));
+      });
+    }
+  });
+</script>

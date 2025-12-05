@@ -1,0 +1,466 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ScoreGauge from '../../components/Results/ScoreGauge.astro';
+import CategoryCard from '../../components/Results/CategoryCard.astro';
+import RecommendationList from '../../components/Results/RecommendationList.astro';
+import ShareButtons from '../../components/Results/ShareButtons.astro';
+import Confetti from '../../components/Results/Confetti.astro';
+import { getCategoryByScore } from '../../lib/categories';
+import { supabase } from '../../lib/supabase';
+
+// Get referral code from URL
+const referralCode = Astro.url.searchParams.get('code');
+
+// Fetch assessment data
+let assessmentData = null;
+let score = 0;
+let category = getCategoryByScore(0);
+
+if (referralCode) {
+  const { data, error } = await supabase
+    .from('assessments')
+    .select('*')
+    .eq('referral_code', referralCode)
+    .single();
+
+  if (data && !error) {
+    assessmentData = data;
+    score = data.score;
+    category = getCategoryByScore(score);
+  }
+}
+
+// If no data found, show placeholder (for development/preview)
+if (!assessmentData) {
+  score = 65;
+  category = getCategoryByScore(score);
+}
+
+// Transform string recommendations to the object format RecommendationList expects
+const recommendations = category.recommendations.slice(0, 5).map((rec, index) => ({
+  title: rec,
+  description: '', // Could be expanded with more detailed descriptions per category
+  priority: index === 0 ? 'high' : index < 3 ? 'medium' : 'low' as const,
+  icon: undefined
+}));
+
+// Generate OG image URL (dynamic based on score)
+const ogImage = `/api/og-image?score=${score}&category=${category.id}`;
+---
+
+<Layout
+  title={`Your Dopamine ROI: ${score} - ${category.name}`}
+  description={`You're a "${category.name}"! ${category.tagline}. Discover what this means for your ADHD entrepreneur journey.`}
+  image={ogImage}
+>
+  <Confetti />
+
+  <main class="results-page">
+    <div class="results-container">
+      <!-- Header -->
+      <header class="results-header">
+        <div class="badge-row">
+          <span class="result-badge">Your Results</span>
+          {referralCode && (
+            <span class="code-badge">Code: {referralCode}</span>
+          )}
+        </div>
+        <h1 class="results-title">Your Dopamine ROI Score</h1>
+      </header>
+
+      <!-- Score Section -->
+      <section class="score-section">
+        <ScoreGauge score={score} />
+      </section>
+
+      <!-- Category Section -->
+      <section class="category-section">
+        <CategoryCard
+          categoryId={category.id}
+          categoryName={category.name}
+          categoryColor={category.color}
+          tagline={category.tagline}
+          description={category.description}
+          icon={category.icon}
+        />
+      </section>
+
+      <!-- What This Means -->
+      <section class="meaning-section">
+        <h2 class="section-title">What This Means</h2>
+        <div class="meaning-content">
+          <div class="meaning-card">
+            <div class="meaning-icon">🧠</div>
+            <h3>Your Brain Pattern</h3>
+            <p>{category.brainPattern || "Your ADHD brain has developed unique patterns for processing business tasks. Understanding these patterns is the key to sustainable growth."}</p>
+          </div>
+
+          <div class="meaning-card">
+            <div class="meaning-icon">⚡</div>
+            <h3>Your Superpower</h3>
+            <p>{category.superpower || "When you're in flow, you can accomplish in hours what others take days to complete. The challenge is engineering more of these moments."}</p>
+          </div>
+
+          <div class="meaning-card">
+            <div class="meaning-icon">🎯</div>
+            <h3>Your Challenge</h3>
+            <p>{category.challenge || "Energy management, not time management, is your bottleneck. The right systems can 3x your effective output."}</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Recommendations -->
+      <section class="recommendations-section">
+        <RecommendationList
+          title="Your Personalized Action Plan"
+          recommendations={recommendations}
+        />
+      </section>
+
+      <!-- CTA Section -->
+      <section class="cta-section">
+        <div class="cta-card">
+          <h3 class="cta-title">Want the Full Playbook?</h3>
+          <p class="cta-description">
+            Get the complete <strong>{category.name} Optimization Guide</strong> with advanced strategies, templates, and a 30-day implementation plan.
+          </p>
+          <a href="/newsletter?source=dopamine-roi" class="cta-button">
+            <span>Get the Free Guide</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="cta-icon">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
+      </section>
+
+      <!-- Share Section -->
+      <section class="share-section">
+        <ShareButtons
+          score={score}
+          categoryName={category.name}
+          referralCode={referralCode || 'preview'}
+        />
+      </section>
+
+      <!-- Retake Link -->
+      <div class="retake-wrapper">
+        <a href="/dopamine-roi" class="retake-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="retake-icon">
+            <path d="M1 4v6h6M23 20v-6h-6" />
+            <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15" />
+          </svg>
+          Retake Assessment
+        </a>
+      </div>
+
+      <!-- Footer Note -->
+      <footer class="results-footer">
+        <p>Built with ❤️ for ADHD entrepreneurs by <a href="/" class="footer-link">Jan Kutschera</a></p>
+        <p class="footer-note">Late-diagnosed at 51. Now building systems that work WITH your brain.</p>
+      </footer>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .results-page {
+    min-height: 100vh;
+    background: var(--color-charcoal-950);
+    padding: 2rem 1rem;
+  }
+
+  .results-container {
+    max-width: 640px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .results-header {
+    text-align: center;
+  }
+
+  .badge-row {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .result-badge {
+    display: inline-block;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-copper-400);
+    background: rgba(184, 115, 51, 0.15);
+    border: 1px solid var(--color-copper-400);
+    border-radius: 2rem;
+  }
+
+  .code-badge {
+    display: inline-block;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.75rem;
+    font-family: var(--font-mono);
+    color: var(--color-stone-400);
+    background: var(--color-charcoal-800);
+    border-radius: 2rem;
+  }
+
+  .results-title {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-stone-100);
+    line-height: 1.2;
+  }
+
+  .score-section {
+    padding: 1rem 0;
+  }
+
+  .category-section {
+    /* Category card styles handled by component */
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-stone-100);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .section-title::before {
+    content: '';
+    width: 4px;
+    height: 1.25rem;
+    background: var(--color-copper-500);
+    border-radius: 2px;
+  }
+
+  .meaning-content {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .meaning-card {
+    padding: 1.25rem;
+    background: var(--color-charcoal-800);
+    border: 1px solid var(--color-charcoal-700);
+    border-radius: 0.75rem;
+    transition: border-color 0.2s ease;
+  }
+
+  .meaning-card:hover {
+    border-color: var(--color-charcoal-600);
+  }
+
+  .meaning-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .meaning-card h3 {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-stone-200);
+    margin-bottom: 0.5rem;
+  }
+
+  .meaning-card p {
+    font-size: 0.875rem;
+    color: var(--color-stone-400);
+    line-height: 1.6;
+  }
+
+  .cta-section {
+    /* CTA card wrapper */
+  }
+
+  .cta-card {
+    text-align: center;
+    padding: 2rem;
+    background: linear-gradient(135deg, var(--color-charcoal-800), var(--color-charcoal-900));
+    border: 2px solid var(--color-copper-600);
+    border-radius: 1rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100px;
+    background: linear-gradient(180deg, rgba(184, 115, 51, 0.1), transparent);
+    pointer-events: none;
+  }
+
+  .cta-title {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-stone-100);
+    margin-bottom: 0.75rem;
+    position: relative;
+  }
+
+  .cta-description {
+    font-size: 1rem;
+    color: var(--color-stone-400);
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+    position: relative;
+  }
+
+  .cta-description strong {
+    color: var(--color-copper-400);
+  }
+
+  .cta-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-charcoal-950);
+    background: var(--color-copper-500);
+    border-radius: 0.5rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    position: relative;
+  }
+
+  .cta-button:hover {
+    background: var(--color-copper-400);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(184, 115, 51, 0.3);
+  }
+
+  .cta-icon {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.2s ease;
+  }
+
+  .cta-button:hover .cta-icon {
+    transform: translateX(4px);
+  }
+
+  .share-section {
+    /* Share buttons styles handled by component */
+  }
+
+  .retake-wrapper {
+    text-align: center;
+  }
+
+  .retake-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
+    color: var(--color-stone-400);
+    background: transparent;
+    border: 1px solid var(--color-charcoal-700);
+    border-radius: 0.5rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .retake-link:hover {
+    color: var(--color-stone-200);
+    border-color: var(--color-charcoal-500);
+    background: var(--color-charcoal-800);
+  }
+
+  .retake-icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .results-footer {
+    text-align: center;
+    padding: 2rem 0;
+    border-top: 1px solid var(--color-charcoal-800);
+  }
+
+  .results-footer p {
+    font-size: 0.875rem;
+    color: var(--color-stone-500);
+    margin-bottom: 0.25rem;
+  }
+
+  .footer-link {
+    color: var(--color-copper-400);
+    text-decoration: none;
+  }
+
+  .footer-link:hover {
+    text-decoration: underline;
+  }
+
+  .footer-note {
+    font-size: 0.75rem !important;
+    color: var(--color-stone-600) !important;
+  }
+
+  @media (max-width: 480px) {
+    .results-page {
+      padding: 1rem 0.75rem;
+    }
+
+    .results-title {
+      font-size: 1.5rem;
+    }
+
+    .cta-card {
+      padding: 1.5rem;
+    }
+
+    .cta-title {
+      font-size: 1.25rem;
+    }
+  }
+</style>
+
+<script>
+  // Track page view for analytics
+  const params = new URLSearchParams(window.location.search);
+  const referralCode = params.get('code');
+
+  if (referralCode) {
+    // Track that user viewed their results
+    fetch('/api/track-event', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        event: 'results_viewed',
+        referralCode
+      })
+    }).catch(() => {});
+  }
+
+  // Check for referred_by parameter (someone clicked a share link)
+  const referredBy = params.get('ref');
+  if (referredBy) {
+    // Track referral click
+    fetch(`/api/referral/${referredBy}`, {
+      method: 'POST'
+    }).catch(() => {});
+  }
+</script>

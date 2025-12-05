@@ -1,0 +1,137 @@
+---
+interface Props {
+  trigger?: 'auto' | 'manual';
+  delay?: number;
+  duration?: number;
+  particleCount?: number;
+  colors?: string[];
+}
+
+const {
+  trigger = 'auto',
+  delay = 500,
+  duration = 3000,
+  particleCount = 100,
+  colors = ['#B87333', '#10B981', '#3B82F6', '#F59E0B', '#EF4444']
+} = Astro.props;
+---
+
+<div
+  class="confetti-container"
+  data-trigger={trigger}
+  data-delay={delay}
+  data-duration={duration}
+  data-particle-count={particleCount}
+  data-colors={JSON.stringify(colors)}
+>
+  <!-- Canvas will be injected here -->
+</div>
+
+<style>
+  .confetti-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  .confetti-container :global(canvas) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+</style>
+
+<script>
+  import confetti from 'canvas-confetti';
+
+  document.querySelectorAll('.confetti-container').forEach(container => {
+    const trigger = container.getAttribute('data-trigger');
+    const delay = parseInt(container.getAttribute('data-delay') || '500');
+    const duration = parseInt(container.getAttribute('data-duration') || '3000');
+    const particleCount = parseInt(container.getAttribute('data-particle-count') || '100');
+    const colors = JSON.parse(container.getAttribute('data-colors') || '[]');
+
+    function fireConfetti() {
+      const end = Date.now() + duration;
+
+      // Initial burst
+      confetti({
+        particleCount,
+        spread: 100,
+        origin: { y: 0.6 },
+        colors,
+        disableForReducedMotion: true
+      });
+
+      // Continuous shower
+      const interval = setInterval(() => {
+        if (Date.now() > end) {
+          clearInterval(interval);
+          return;
+        }
+
+        confetti({
+          particleCount: 3,
+          angle: 60,
+          spread: 55,
+          origin: { x: 0, y: 0.6 },
+          colors,
+          disableForReducedMotion: true
+        });
+
+        confetti({
+          particleCount: 3,
+          angle: 120,
+          spread: 55,
+          origin: { x: 1, y: 0.6 },
+          colors,
+          disableForReducedMotion: true
+        });
+      }, 100);
+
+      // Side cannons after brief delay
+      setTimeout(() => {
+        confetti({
+          particleCount: 50,
+          angle: 60,
+          spread: 80,
+          origin: { x: 0, y: 0.8 },
+          colors,
+          disableForReducedMotion: true
+        });
+
+        confetti({
+          particleCount: 50,
+          angle: 120,
+          spread: 80,
+          origin: { x: 1, y: 0.8 },
+          colors,
+          disableForReducedMotion: true
+        });
+      }, 300);
+    }
+
+    if (trigger === 'auto') {
+      setTimeout(fireConfetti, delay);
+    }
+
+    // Expose manual trigger
+    (container as any).fireConfetti = fireConfetti;
+
+    // Listen for custom event
+    container.addEventListener('trigger-confetti', fireConfetti);
+  });
+
+  // Global helper to trigger confetti from anywhere
+  (window as any).triggerConfetti = () => {
+    document.querySelectorAll('.confetti-container').forEach(container => {
+      container.dispatchEvent(new CustomEvent('trigger-confetti'));
+    });
+  };
+</script>

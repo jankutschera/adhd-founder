@@ -1,0 +1,205 @@
+---
+interface Props {
+  score: number;
+  label?: string;
+  animated?: boolean;
+}
+
+const { score, label = 'Dopamine ROI', animated = true } = Astro.props;
+
+// Calculate gauge angle (0-100 maps to -135 to 135 degrees)
+const normalizedScore = Math.max(0, Math.min(100, score));
+const gaugeAngle = -135 + (normalizedScore / 100) * 270;
+
+// Determine color based on score
+const getScoreColor = (score: number) => {
+  if (score >= 70) return '#10B981'; // Green - Cash Engine
+  if (score >= 40) return '#3B82F6'; // Blue - Delegate Zone
+  if (score >= 20) return '#F59E0B'; // Amber - Kill Zone
+  return '#EF4444'; // Red - Profitable Chaos
+};
+
+const scoreColor = getScoreColor(normalizedScore);
+---
+
+<div class="gauge-container" data-score={normalizedScore} data-animated={animated}>
+  <svg viewBox="0 0 200 120" class="gauge-svg">
+    <!-- Background arc -->
+    <path
+      d="M 20 100 A 80 80 0 0 1 180 100"
+      fill="none"
+      stroke="var(--color-charcoal-700)"
+      stroke-width="12"
+      stroke-linecap="round"
+    />
+
+    <!-- Score arc -->
+    <path
+      d="M 20 100 A 80 80 0 0 1 180 100"
+      fill="none"
+      stroke={scoreColor}
+      stroke-width="12"
+      stroke-linecap="round"
+      class="gauge-fill"
+      style={`--gauge-offset: ${270 - (normalizedScore / 100) * 270}`}
+    />
+
+    <!-- Glow effect -->
+    <path
+      d="M 20 100 A 80 80 0 0 1 180 100"
+      fill="none"
+      stroke={scoreColor}
+      stroke-width="12"
+      stroke-linecap="round"
+      class="gauge-glow"
+      style={`--gauge-offset: ${270 - (normalizedScore / 100) * 270}`}
+    />
+
+    <!-- Needle -->
+    <g class="gauge-needle" style={`--needle-angle: ${gaugeAngle}deg`}>
+      <circle cx="100" cy="100" r="8" fill="var(--color-charcoal-900)" />
+      <circle cx="100" cy="100" r="5" fill={scoreColor} />
+      <line
+        x1="100"
+        y1="100"
+        x2="100"
+        y2="35"
+        stroke="var(--color-stone-100)"
+        stroke-width="3"
+        stroke-linecap="round"
+      />
+    </g>
+
+    <!-- Tick marks -->
+    {[0, 25, 50, 75, 100].map((tick) => {
+      const tickAngle = -135 + (tick / 100) * 270;
+      const radians = (tickAngle * Math.PI) / 180;
+      const innerRadius = 65;
+      const outerRadius = 75;
+      const x1 = 100 + innerRadius * Math.cos(radians);
+      const y1 = 100 + innerRadius * Math.sin(radians);
+      const x2 = 100 + outerRadius * Math.cos(radians);
+      const y2 = 100 + outerRadius * Math.sin(radians);
+      return (
+        <line
+          x1={x1}
+          y1={y1}
+          x2={x2}
+          y2={y2}
+          stroke="var(--color-charcoal-600)"
+          stroke-width="2"
+          stroke-linecap="round"
+        />
+      );
+    })}
+  </svg>
+
+  <div class="score-display">
+    <span class="score-value" style={`color: ${scoreColor}`}>{normalizedScore}</span>
+    <span class="score-label">{label}</span>
+  </div>
+</div>
+
+<style>
+  .gauge-container {
+    position: relative;
+    width: 100%;
+    max-width: 280px;
+    margin: 0 auto;
+  }
+
+  .gauge-svg {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .gauge-fill {
+    stroke-dasharray: 270;
+    stroke-dashoffset: var(--gauge-offset);
+    transition: stroke-dashoffset 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .gauge-container[data-animated="true"] .gauge-fill {
+    stroke-dashoffset: 270;
+  }
+
+  .gauge-container[data-animated="true"].animated .gauge-fill {
+    stroke-dashoffset: var(--gauge-offset);
+  }
+
+  .gauge-glow {
+    stroke-dasharray: 270;
+    stroke-dashoffset: var(--gauge-offset);
+    filter: blur(8px);
+    opacity: 0.5;
+    transition: stroke-dashoffset 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .gauge-container[data-animated="true"] .gauge-glow {
+    stroke-dashoffset: 270;
+  }
+
+  .gauge-container[data-animated="true"].animated .gauge-glow {
+    stroke-dashoffset: var(--gauge-offset);
+  }
+
+  .gauge-needle {
+    transform-origin: 100px 100px;
+    transform: rotate(var(--needle-angle));
+    transition: transform 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .gauge-container[data-animated="true"] .gauge-needle {
+    transform: rotate(-135deg);
+  }
+
+  .gauge-container[data-animated="true"].animated .gauge-needle {
+    transform: rotate(var(--needle-angle));
+  }
+
+  .score-display {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+  }
+
+  .score-value {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1;
+    text-shadow: 0 0 40px currentColor;
+  }
+
+  .score-label {
+    display: block;
+    font-size: 0.75rem;
+    font-family: var(--font-mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-stone-400);
+    margin-top: 0.25rem;
+  }
+</style>
+
+<script>
+  // Trigger animation when gauge becomes visible
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.classList.add('animated');
+        }, 300);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  document.querySelectorAll('.gauge-container[data-animated="true"]').forEach(gauge => {
+    observer.observe(gauge);
+  });
+</script>

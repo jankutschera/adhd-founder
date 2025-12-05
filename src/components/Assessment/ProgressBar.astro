@@ -1,0 +1,119 @@
+---
+interface Props {
+  currentStep: number;
+  totalSteps: number;
+}
+
+const { currentStep, totalSteps } = Astro.props;
+const progress = (currentStep / totalSteps) * 100;
+---
+
+<div class="progress-container">
+  <div class="progress-info">
+    <span class="step-counter font-mono">
+      Question {currentStep} of {totalSteps}
+    </span>
+    <span class="time-estimate">
+      ~{Math.ceil((totalSteps - currentStep + 1) * 0.5)} min left
+    </span>
+  </div>
+  <div class="progress-track">
+    <div
+      class="progress-fill"
+      style={`width: ${progress}%`}
+      data-progress={progress}
+    >
+      <div class="progress-glow"></div>
+    </div>
+    <!-- Milestone markers -->
+    {[25, 50, 75].map((milestone) => (
+      <div
+        class={`milestone ${progress >= milestone ? 'passed' : ''}`}
+        style={`left: ${milestone}%`}
+      />
+    ))}
+  </div>
+</div>
+
+<style>
+  .progress-container {
+    width: 100%;
+    margin-bottom: 2rem;
+  }
+
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+
+  .step-counter {
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-copper-400);
+  }
+
+  .time-estimate {
+    font-size: 0.75rem;
+    color: var(--color-stone-400);
+  }
+
+  .progress-track {
+    position: relative;
+    height: 6px;
+    background: var(--color-charcoal-700);
+    border-radius: 3px;
+    overflow: visible;
+  }
+
+  .progress-fill {
+    position: relative;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      var(--color-copper-600),
+      var(--color-copper-400)
+    );
+    border-radius: 3px;
+    transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .progress-glow {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    background: var(--color-copper-400);
+    border-radius: 50%;
+    filter: blur(10px);
+    opacity: 0.6;
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% { opacity: 0.6; transform: translateY(-50%) scale(1); }
+    50% { opacity: 0.9; transform: translateY(-50%) scale(1.2); }
+  }
+
+  .milestone {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    background: var(--color-charcoal-600);
+    border: 2px solid var(--color-charcoal-700);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+  }
+
+  .milestone.passed {
+    background: var(--color-copper-500);
+    border-color: var(--color-copper-400);
+    box-shadow: 0 0 10px rgba(184, 115, 51, 0.5);
+  }
+</style>

@@ -1,0 +1,345 @@
+---
+interface Props {
+  id: string;
+  title: string;
+  subtitle?: string;
+  placeholder?: string;
+  buttonText?: string;
+  consentText?: string;
+}
+
+const {
+  id,
+  title,
+  subtitle,
+  placeholder = 'your@email.com',
+  buttonText = 'See My Results',
+  consentText = 'I agree to receive my results and occasional insights for ADHD entrepreneurs.'
+} = Astro.props;
+---
+
+<div class="question-container" data-question-type="email" data-question-id={id}>
+  <div class="question-header">
+    <h2 class="headline-md">{title}</h2>
+    {subtitle && <p class="subtitle">{subtitle}</p>}
+  </div>
+
+  <form class="email-form" novalidate>
+    <div class="input-wrapper">
+      <input
+        type="email"
+        id={id}
+        name={id}
+        placeholder={placeholder}
+        class="email-input"
+        required
+        aria-label="Email address"
+        autocomplete="email"
+      />
+      <div class="input-icon valid-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+          <path d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
+      <div class="input-icon error-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 9v4m0 4h.01M12 3a9 9 0 100 18 9 9 0 000-18z" />
+        </svg>
+      </div>
+    </div>
+
+    <p class="error-message" role="alert" aria-live="polite"></p>
+
+    <label class="consent-checkbox">
+      <input type="checkbox" name="consent" required />
+      <span class="checkbox-custom">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+          <path d="M5 13l4 4L19 7" />
+        </svg>
+      </span>
+      <span class="consent-text">{consentText}</span>
+    </label>
+
+    <button type="submit" class="submit-button" disabled>
+      <span class="button-text">{buttonText}</span>
+      <span class="button-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14m-7-7l7 7-7 7" />
+        </svg>
+      </span>
+    </button>
+  </form>
+
+  <p class="privacy-note">
+    🔒 We respect your privacy. Unsubscribe anytime.
+  </p>
+</div>
+
+<style>
+  .question-container {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .question-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .headline-md {
+    color: var(--color-stone-100);
+    margin-bottom: 0.5rem;
+  }
+
+  .subtitle {
+    color: var(--color-stone-400);
+    font-size: 1rem;
+  }
+
+  .email-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .input-wrapper {
+    position: relative;
+  }
+
+  .email-input {
+    width: 100%;
+    padding: 1.25rem 3rem 1.25rem 1.25rem;
+    font-size: 1.125rem;
+    font-family: var(--font-body);
+    color: var(--color-stone-100);
+    background: var(--color-charcoal-800);
+    border: 2px solid var(--color-charcoal-700);
+    border-radius: 0.75rem;
+    transition: all 0.2s ease;
+  }
+
+  .email-input::placeholder {
+    color: var(--color-stone-500);
+  }
+
+  .email-input:hover {
+    border-color: var(--color-charcoal-500);
+  }
+
+  .email-input:focus {
+    outline: none;
+    border-color: var(--color-copper-500);
+    box-shadow: 0 0 0 3px rgba(184, 115, 51, 0.2);
+  }
+
+  .email-input.valid {
+    border-color: var(--color-forest-500);
+  }
+
+  .email-input.invalid {
+    border-color: #ef4444;
+  }
+
+  .input-icon {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .valid-icon {
+    color: var(--color-forest-400);
+  }
+
+  .error-icon {
+    color: #ef4444;
+  }
+
+  .email-input.valid ~ .valid-icon {
+    opacity: 1;
+  }
+
+  .email-input.invalid ~ .error-icon {
+    opacity: 1;
+  }
+
+  .error-message {
+    font-size: 0.875rem;
+    color: #ef4444;
+    min-height: 1.25rem;
+    margin: -0.5rem 0;
+  }
+
+  .consent-checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .consent-checkbox input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .checkbox-custom {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--color-charcoal-600);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    margin-top: 2px;
+  }
+
+  .checkbox-custom svg {
+    width: 14px;
+    height: 14px;
+    opacity: 0;
+    color: var(--color-charcoal-950);
+    transition: opacity 0.2s ease;
+  }
+
+  .consent-checkbox input:checked + .checkbox-custom {
+    background: var(--color-copper-500);
+    border-color: var(--color-copper-500);
+  }
+
+  .consent-checkbox input:checked + .checkbox-custom svg {
+    opacity: 1;
+  }
+
+  .consent-checkbox:focus-within .checkbox-custom {
+    box-shadow: 0 0 0 3px rgba(184, 115, 51, 0.2);
+  }
+
+  .consent-text {
+    font-size: 0.875rem;
+    color: var(--color-stone-400);
+    line-height: 1.5;
+  }
+
+  .submit-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 1.25rem 2rem;
+    font-size: 1.125rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--color-charcoal-950);
+    background: linear-gradient(135deg, var(--color-copper-400), var(--color-copper-500));
+    border: none;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .submit-button:not(:disabled) {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .submit-button:not(:disabled):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(184, 115, 51, 0.4);
+  }
+
+  .submit-button:not(:disabled):active {
+    transform: translateY(0);
+  }
+
+  .button-icon {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.2s ease;
+  }
+
+  .submit-button:hover .button-icon {
+    transform: translateX(4px);
+  }
+
+  .privacy-note {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--color-stone-500);
+    margin-top: 1rem;
+  }
+</style>
+
+<script>
+  document.querySelectorAll('.question-container[data-question-type="email"]').forEach(container => {
+    const form = container.querySelector('form') as HTMLFormElement;
+    const input = container.querySelector('input[type="email"]') as HTMLInputElement;
+    const consent = container.querySelector('input[type="checkbox"]') as HTMLInputElement;
+    const button = container.querySelector('button[type="submit"]') as HTMLButtonElement;
+    const errorMessage = container.querySelector('.error-message') as HTMLElement;
+    const questionId = container.getAttribute('data-question-id');
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    function validateEmail(): boolean {
+      const value = input.value.trim();
+      if (!value) {
+        input.classList.remove('valid', 'invalid');
+        return false;
+      }
+      const isValid = emailRegex.test(value);
+      input.classList.toggle('valid', isValid);
+      input.classList.toggle('invalid', !isValid);
+      return isValid;
+    }
+
+    function updateButtonState() {
+      const emailValid = validateEmail();
+      const consentChecked = consent.checked;
+      button.disabled = !(emailValid && consentChecked);
+
+      if (!emailValid && input.value.trim()) {
+        errorMessage.textContent = 'Please enter a valid email address';
+      } else {
+        errorMessage.textContent = '';
+      }
+    }
+
+    input.addEventListener('input', updateButtonState);
+    input.addEventListener('blur', updateButtonState);
+    consent.addEventListener('change', updateButtonState);
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      if (!button.disabled) {
+        // Haptic feedback
+        if ('vibrate' in navigator) {
+          navigator.vibrate([20, 50, 20]);
+        }
+
+        // Dispatch event with email
+        container.dispatchEvent(new CustomEvent('answer-change', {
+          bubbles: true,
+          detail: { id: questionId, value: input.value.trim() }
+        }));
+
+        // Dispatch completion event
+        container.dispatchEvent(new CustomEvent('assessment-complete', {
+          bubbles: true,
+          detail: { email: input.value.trim() }
+        }));
+      }
+    });
+  });
+</script>

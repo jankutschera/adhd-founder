@@ -1,0 +1,255 @@
+---
+interface Recommendation {
+  title: string;
+  description: string;
+  priority: 'high' | 'medium' | 'low';
+  icon?: string;
+}
+
+interface Props {
+  title?: string;
+  recommendations: Recommendation[];
+}
+
+const { title = 'Your Action Plan', recommendations } = Astro.props;
+
+const priorityConfig = {
+  high: { label: 'Do First', color: '#EF4444', icon: '🔥' },
+  medium: { label: 'Next Up', color: '#F59E0B', icon: '⚡' },
+  low: { label: 'When Ready', color: '#3B82F6', icon: '💡' }
+};
+---
+
+<div class="recommendations-container">
+  <h3 class="recommendations-title">{title}</h3>
+
+  <div class="recommendations-list">
+    {recommendations.map((rec, index) => (
+      <div
+        class="recommendation-item"
+        style={`--item-delay: ${index * 0.1}s; --priority-color: ${priorityConfig[rec.priority].color}`}
+      >
+        <div class="item-number">{index + 1}</div>
+
+        <div class="item-content">
+          <div class="item-header">
+            <span class="item-icon">{rec.icon || priorityConfig[rec.priority].icon}</span>
+            <h4 class="item-title">{rec.title}</h4>
+            <span class="priority-badge" style={`background: ${priorityConfig[rec.priority].color}`}>
+              {priorityConfig[rec.priority].label}
+            </span>
+          </div>
+          <p class="item-description">{rec.description}</p>
+        </div>
+
+        <div class="item-check">
+          <input type="checkbox" id={`rec-${index}`} class="check-input" />
+          <label for={`rec-${index}`} class="check-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+              <path d="M5 13l4 4L19 7" />
+            </svg>
+          </label>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .recommendations-container {
+    width: 100%;
+  }
+
+  .recommendations-title {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-stone-100);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .recommendations-title::before {
+    content: '';
+    width: 4px;
+    height: 1.25rem;
+    background: var(--color-copper-500);
+    border-radius: 2px;
+  }
+
+  .recommendations-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .recommendation-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.25rem;
+    background: var(--color-charcoal-800);
+    border: 1px solid var(--color-charcoal-700);
+    border-left: 3px solid var(--priority-color);
+    border-radius: 0.75rem;
+    animation: slide-in 0.5s ease-out backwards;
+    animation-delay: var(--item-delay);
+    transition: all 0.2s ease;
+  }
+
+  @keyframes slide-in {
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+  }
+
+  .recommendation-item:hover {
+    border-color: var(--color-charcoal-600);
+    transform: translateX(4px);
+  }
+
+  .item-number {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-charcoal-950);
+    background: var(--priority-color);
+    border-radius: 50%;
+  }
+
+  .item-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .item-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .item-icon {
+    font-size: 1.25rem;
+  }
+
+  .item-title {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-stone-100);
+  }
+
+  .priority-badge {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-charcoal-950);
+    border-radius: 1rem;
+  }
+
+  .item-description {
+    font-size: 0.875rem;
+    color: var(--color-stone-400);
+    line-height: 1.6;
+  }
+
+  .item-check {
+    flex-shrink: 0;
+  }
+
+  .check-input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .check-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: 2px solid var(--color-charcoal-600);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .check-label svg {
+    width: 16px;
+    height: 16px;
+    opacity: 0;
+    color: var(--color-charcoal-950);
+    transition: opacity 0.2s ease;
+  }
+
+  .check-input:checked + .check-label {
+    background: var(--color-forest-500);
+    border-color: var(--color-forest-500);
+  }
+
+  .check-input:checked + .check-label svg {
+    opacity: 1;
+  }
+
+  .check-label:hover {
+    border-color: var(--color-charcoal-400);
+  }
+
+  .check-input:focus + .check-label {
+    box-shadow: 0 0 0 3px rgba(184, 115, 51, 0.2);
+  }
+
+  /* Completed state */
+  .recommendation-item:has(.check-input:checked) {
+    opacity: 0.6;
+  }
+
+  .recommendation-item:has(.check-input:checked) .item-title {
+    text-decoration: line-through;
+  }
+
+  @media (max-width: 640px) {
+    .recommendation-item {
+      flex-wrap: wrap;
+    }
+
+    .item-check {
+      margin-left: auto;
+    }
+  }
+</style>
+
+<script>
+  // Persist checked state to localStorage
+  document.querySelectorAll('.recommendation-item .check-input').forEach(checkbox => {
+    const id = checkbox.id;
+    const stored = localStorage.getItem(`rec-${id}`);
+
+    if (stored === 'true') {
+      (checkbox as HTMLInputElement).checked = true;
+    }
+
+    checkbox.addEventListener('change', () => {
+      localStorage.setItem(`rec-${id}`, (checkbox as HTMLInputElement).checked.toString());
+
+      // Haptic feedback
+      if ('vibrate' in navigator) {
+        navigator.vibrate(15);
+      }
+    });
+  });
+</script>

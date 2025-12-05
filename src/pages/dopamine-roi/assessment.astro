@@ -1,0 +1,489 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ProgressBar from '../../components/Assessment/ProgressBar.astro';
+import QuestionDropdown from '../../components/Assessment/QuestionDropdown.astro';
+import QuestionSlider from '../../components/Assessment/QuestionSlider.astro';
+import QuestionCards from '../../components/Assessment/QuestionCards.astro';
+import QuestionMultiSelect from '../../components/Assessment/QuestionMultiSelect.astro';
+import EmailCapture from '../../components/Assessment/EmailCapture.astro';
+import NavigationButtons from '../../components/Assessment/NavigationButtons.astro';
+import { questions } from '../../lib/scoring';
+
+const totalSteps = questions.length + 1; // +1 for email capture
+---
+
+<Layout
+  title="Dopamine ROI Calculator"
+  description="Discover which business activities give you energy vs. drain you. A 2-minute assessment for ADHD entrepreneurs."
+  image="/dopamine-roi-og.jpg"
+>
+  <main class="assessment-page">
+    <div class="assessment-container">
+      <!-- Header -->
+      <header class="assessment-header">
+        <a href="/dopamine-roi" class="back-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="back-icon">
+            <path d="M19 12H5M12 19l-7-7 7-7" />
+          </svg>
+          <span>Back</span>
+        </a>
+        <div class="header-content">
+          <h1 class="assessment-title">Dopamine ROI Calculator</h1>
+          <p class="assessment-subtitle">2-minute assessment</p>
+        </div>
+      </header>
+
+      <!-- Progress -->
+      <div class="progress-wrapper">
+        <ProgressBar currentStep={1} totalSteps={totalSteps} />
+      </div>
+
+      <!-- Questions Container -->
+      <div class="questions-wrapper" id="questions-container">
+        <!-- Question 1: Revenue Range -->
+        <div class="question-step" data-step="1">
+          <QuestionDropdown
+            id="revenue"
+            title="What's your current revenue range?"
+            subtitle="This helps us calibrate recommendations to your business stage"
+            options={questions[0].options}
+          />
+        </div>
+
+        <!-- Question 2: Time Split -->
+        <div class="question-step" data-step="2" style="display: none;">
+          <QuestionSlider
+            id="timeSplit"
+            title="How do you split your time?"
+            subtitle="What percentage goes to strategic work vs. day-to-day operations?"
+            leftLabel="All Operations"
+            rightLabel="All Strategy"
+            min={0}
+            max={100}
+            step={5}
+          />
+        </div>
+
+        <!-- Question 3: Energy Vampires -->
+        <div class="question-step" data-step="3" style="display: none;">
+          <QuestionMultiSelect
+            id="energyVampires"
+            title="Which activities drain your energy?"
+            subtitle="Select all that apply - be honest!"
+            options={questions[2].options}
+            maxSelections={5}
+          />
+        </div>
+
+        <!-- Question 4: Flow State Activities -->
+        <div class="question-step" data-step="4" style="display: none;">
+          <QuestionMultiSelect
+            id="flowActivities"
+            title="Which activities put you in flow state?"
+            subtitle="These are your dopamine gold mines"
+            options={questions[3].options}
+            maxSelections={5}
+          />
+        </div>
+
+        <!-- Question 5: Chaos Level -->
+        <div class="question-step" data-step="5" style="display: none;">
+          <QuestionSlider
+            id="chaosLevel"
+            title="How chaotic is your average workday?"
+            subtitle="From calm and structured to pure firefighting"
+            leftLabel="Zen Master"
+            rightLabel="Chaos Lord"
+            min={1}
+            max={10}
+            step={1}
+          />
+        </div>
+
+        <!-- Question 6: Delegation Status -->
+        <div class="question-step" data-step="6" style="display: none;">
+          <QuestionCards
+            id="delegationStatus"
+            title="How much have you delegated?"
+            subtitle="Where are you on the letting-go journey?"
+            options={questions[5].options}
+            columns={2}
+          />
+        </div>
+
+        <!-- Question 7: Biggest Struggle -->
+        <div class="question-step" data-step="7" style="display: none;">
+          <QuestionCards
+            id="biggestStruggle"
+            title="What's your biggest struggle right now?"
+            subtitle="This helps personalize your action plan"
+            options={questions[6].options}
+            columns={2}
+          />
+        </div>
+
+        <!-- Question 8: Email Capture -->
+        <div class="question-step" data-step="8" style="display: none;">
+          <EmailCapture
+            title="Almost there! Where should we send your results?"
+            subtitle="Get your personalized Dopamine ROI report + action plan"
+          />
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <div class="navigation-wrapper">
+        <NavigationButtons
+          showBack={false}
+          showSkip={false}
+          nextLabel="Let's Go"
+        />
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .assessment-page {
+    min-height: 100vh;
+    background: var(--color-charcoal-950);
+    padding: 1rem;
+  }
+
+  .assessment-container {
+    max-width: 640px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 2rem);
+  }
+
+  .assessment-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 0;
+    margin-bottom: 1rem;
+  }
+
+  .back-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    color: var(--color-stone-400);
+    text-decoration: none;
+    font-size: 0.875rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+  }
+
+  .back-link:hover {
+    color: var(--color-stone-200);
+    background: var(--color-charcoal-800);
+  }
+
+  .back-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .header-content {
+    flex: 1;
+    text-align: center;
+  }
+
+  .assessment-title {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-stone-100);
+  }
+
+  .assessment-subtitle {
+    font-size: 0.75rem;
+    color: var(--color-stone-500);
+    font-family: var(--font-mono);
+    letter-spacing: 0.05em;
+  }
+
+  .progress-wrapper {
+    margin-bottom: 2rem;
+  }
+
+  .questions-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .question-step {
+    animation: fade-in-up 0.4s ease-out;
+  }
+
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+  }
+
+  .question-step[style*="display: none"] {
+    display: none !important;
+  }
+
+  .navigation-wrapper {
+    padding: 1.5rem 0;
+    margin-top: auto;
+  }
+
+  /* Mobile optimizations */
+  @media (max-width: 480px) {
+    .assessment-page {
+      padding: 0.5rem;
+    }
+
+    .assessment-header {
+      padding: 0.5rem 0;
+    }
+
+    .assessment-title {
+      font-size: 1rem;
+    }
+  }
+</style>
+
+<script>
+  // Assessment State Management
+  interface AssessmentState {
+    currentStep: number;
+    answers: Record<string, any>;
+    email: string;
+  }
+
+  const STORAGE_KEY = 'dopamine-roi-assessment';
+
+  // Load saved state or initialize
+  function loadState(): AssessmentState {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch {
+        // Corrupted state, start fresh
+      }
+    }
+    return {
+      currentStep: 1,
+      answers: {},
+      email: ''
+    };
+  }
+
+  function saveState(state: AssessmentState) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  const state = loadState();
+  const totalSteps = 8;
+
+  // DOM Elements
+  const questionsContainer = document.getElementById('questions-container');
+  const progressBar = document.querySelector('.progress-bar') as HTMLElement;
+  const progressText = document.querySelector('.progress-text') as HTMLElement;
+  const backButton = document.querySelector('.back-button') as HTMLButtonElement;
+  const nextButton = document.querySelector('.next-button') as HTMLButtonElement;
+  const skipButton = document.querySelector('.skip-button') as HTMLButtonElement;
+
+  // Initialize UI from saved state
+  function initializeUI() {
+    showStep(state.currentStep);
+    updateProgress();
+    updateNavigation();
+
+    // Restore answers to form elements
+    Object.entries(state.answers).forEach(([key, value]) => {
+      restoreAnswer(key, value);
+    });
+  }
+
+  function restoreAnswer(id: string, value: any) {
+    // Dropdown
+    const select = document.querySelector(`select[name="${id}"]`) as HTMLSelectElement;
+    if (select && typeof value === 'string') {
+      select.value = value;
+      return;
+    }
+
+    // Slider
+    const slider = document.querySelector(`input[type="range"][id="${id}"]`) as HTMLInputElement;
+    if (slider && typeof value === 'number') {
+      slider.value = value.toString();
+      const valueDisplay = slider.closest('.slider-container')?.querySelector('.slider-value');
+      if (valueDisplay) valueDisplay.textContent = value.toString();
+      return;
+    }
+
+    // Cards (single select)
+    const card = document.querySelector(`.option-card[data-id="${id}"][data-value="${value}"]`);
+    if (card) {
+      card.classList.add('selected');
+      return;
+    }
+
+    // Multi-select
+    if (Array.isArray(value)) {
+      value.forEach(v => {
+        const multiCard = document.querySelector(`.option-card[data-id="${id}"][data-value="${v}"]`);
+        if (multiCard) multiCard.classList.add('selected');
+      });
+    }
+  }
+
+  function showStep(step: number) {
+    document.querySelectorAll('.question-step').forEach((el, index) => {
+      const stepEl = el as HTMLElement;
+      if (index + 1 === step) {
+        stepEl.style.display = 'block';
+        // Trigger animation
+        stepEl.style.animation = 'none';
+        stepEl.offsetHeight; // Reflow
+        stepEl.style.animation = 'fade-in-up 0.4s ease-out';
+      } else {
+        stepEl.style.display = 'none';
+      }
+    });
+  }
+
+  function updateProgress() {
+    const percentage = (state.currentStep / totalSteps) * 100;
+
+    if (progressBar) {
+      const fill = progressBar.querySelector('.progress-fill') as HTMLElement;
+      if (fill) fill.style.width = `${percentage}%`;
+    }
+
+    if (progressText) {
+      progressText.textContent = `${state.currentStep} of ${totalSteps}`;
+    }
+  }
+
+  function updateNavigation() {
+    // Back button
+    if (backButton) {
+      if (state.currentStep === 1) {
+        backButton.style.display = 'none';
+      } else {
+        backButton.style.display = 'flex';
+      }
+    }
+
+    // Skip button (only for optional questions)
+    const optionalSteps = [2, 5]; // Time Split and Chaos Level sliders have defaults
+    if (skipButton) {
+      skipButton.style.display = optionalSteps.includes(state.currentStep) ? 'block' : 'none';
+    }
+
+    // Next button
+    if (nextButton) {
+      const buttonText = nextButton.querySelector('.button-text');
+      if (state.currentStep === totalSteps) {
+        if (buttonText) buttonText.textContent = 'See My Results';
+      } else if (state.currentStep === 1) {
+        if (buttonText) buttonText.textContent = "Let's Go";
+      } else {
+        if (buttonText) buttonText.textContent = 'Continue';
+      }
+
+      // Disable if required answer not provided
+      const isAnswered = isCurrentStepAnswered();
+      nextButton.disabled = !isAnswered && state.currentStep === totalSteps; // Only enforce on email step
+    }
+  }
+
+  function isCurrentStepAnswered(): boolean {
+    const stepQuestionIds = ['revenue', 'timeSplit', 'energyVampires', 'flowActivities', 'chaosLevel', 'delegationStatus', 'biggestStruggle', 'email'];
+    const currentId = stepQuestionIds[state.currentStep - 1];
+    return state.answers[currentId] !== undefined || currentId === 'email' && state.email;
+  }
+
+  function goToStep(step: number) {
+    if (step < 1 || step > totalSteps) return;
+
+    state.currentStep = step;
+    saveState(state);
+    showStep(step);
+    updateProgress();
+    updateNavigation();
+
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Haptic feedback
+    if ('vibrate' in navigator) {
+      navigator.vibrate(15);
+    }
+  }
+
+  // Event Listeners
+  document.addEventListener('answer-change', ((e: CustomEvent) => {
+    const { id, value } = e.detail;
+    state.answers[id] = value;
+    saveState(state);
+    updateNavigation();
+  }) as EventListener);
+
+  document.addEventListener('assessment-complete', (async (e: CustomEvent) => {
+    const { email } = e.detail;
+    state.email = email;
+    saveState(state);
+
+    // Submit to API
+    await submitAssessment();
+  }) as EventListener);
+
+  document.addEventListener('nav-back', () => {
+    goToStep(state.currentStep - 1);
+  });
+
+  document.addEventListener('nav-next', () => {
+    if (state.currentStep < totalSteps) {
+      goToStep(state.currentStep + 1);
+    }
+  });
+
+  document.addEventListener('nav-skip', () => {
+    goToStep(state.currentStep + 1);
+  });
+
+  async function submitAssessment() {
+    try {
+      const response = await fetch('/api/submit-assessment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: state.email,
+          answers: state.answers
+        })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        // Clear saved state
+        localStorage.removeItem(STORAGE_KEY);
+        // Redirect to results with referral code
+        window.location.href = `/dopamine-roi/results?code=${data.referralCode}`;
+      } else {
+        console.error('Failed to submit assessment');
+        // Show error state
+        alert('Something went wrong. Please try again.');
+      }
+    } catch (err) {
+      console.error('Submit error:', err);
+      alert('Connection error. Please check your internet and try again.');
+    }
+  }
+
+  // Initialize
+  initializeUI();
+</script>

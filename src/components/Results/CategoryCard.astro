@@ -1,0 +1,161 @@
+---
+interface Props {
+  categoryId: string;
+  categoryName: string;
+  categoryColor: string;
+  tagline: string;
+  description: string;
+  icon?: string;
+}
+
+const { categoryId, categoryName, categoryColor, tagline, description, icon } = Astro.props;
+---
+
+<div class="category-card" data-category={categoryId} style={`--category-color: ${categoryColor}`}>
+  <div class="card-glow"></div>
+
+  <div class="card-header">
+    {icon && <span class="category-icon">{icon}</span>}
+    <div class="category-badge">
+      <span class="badge-text">{categoryName}</span>
+    </div>
+  </div>
+
+  <h2 class="category-tagline">{tagline}</h2>
+
+  <p class="category-description">{description}</p>
+
+  <div class="card-decoration">
+    <svg viewBox="0 0 100 100" class="decoration-pattern">
+      <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.2" />
+      <circle cx="50" cy="50" r="35" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.15" />
+      <circle cx="50" cy="50" r="25" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.1" />
+    </svg>
+  </div>
+</div>
+
+<style>
+  .category-card {
+    position: relative;
+    padding: 2rem;
+    background: linear-gradient(
+      135deg,
+      var(--color-charcoal-800),
+      var(--color-charcoal-900)
+    );
+    border: 2px solid var(--category-color);
+    border-radius: 1rem;
+    overflow: hidden;
+    animation: card-appear 0.6s ease-out backwards;
+  }
+
+  @keyframes card-appear {
+    from {
+      opacity: 0;
+      transform: translateY(20px) scale(0.95);
+    }
+  }
+
+  .card-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100px;
+    background: linear-gradient(
+      180deg,
+      var(--category-color),
+      transparent
+    );
+    opacity: 0.1;
+    pointer-events: none;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .category-icon {
+    font-size: 2.5rem;
+  }
+
+  .category-badge {
+    display: inline-flex;
+    padding: 0.5rem 1rem;
+    background: var(--category-color);
+    border-radius: 2rem;
+  }
+
+  .badge-text {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.875rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-charcoal-950);
+  }
+
+  .category-tagline {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--color-stone-100);
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 1;
+    line-height: 1.3;
+  }
+
+  .category-description {
+    font-size: 1rem;
+    color: var(--color-stone-400);
+    line-height: 1.7;
+    position: relative;
+    z-index: 1;
+  }
+
+  .card-decoration {
+    position: absolute;
+    right: -30px;
+    bottom: -30px;
+    width: 150px;
+    height: 150px;
+    color: var(--category-color);
+    opacity: 0.3;
+    pointer-events: none;
+  }
+
+  .decoration-pattern {
+    width: 100%;
+    height: 100%;
+    animation: rotate-slow 30s linear infinite;
+  }
+
+  @keyframes rotate-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  /* Hover effect */
+  .category-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      transparent,
+      rgba(255, 255, 255, 0.02)
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .category-card:hover::before {
+    opacity: 1;
+  }
+</style>

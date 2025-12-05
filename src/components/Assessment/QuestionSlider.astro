@@ -1,0 +1,194 @@
+---
+interface Props {
+  id: string;
+  title: string;
+  subtitle?: string;
+  min: number;
+  max: number;
+  step: number;
+  value?: number;
+  labels?: {
+    min: string;
+    max: string;
+  };
+}
+
+const { id, title, subtitle, min, max, step, value = Math.floor((max - min) / 2), labels } = Astro.props;
+---
+
+<div class="question-container" data-question-type="slider" data-question-id={id}>
+  <div class="question-header">
+    <h2 class="headline-md">{title}</h2>
+    {subtitle && <p class="subtitle">{subtitle}</p>}
+  </div>
+
+  <div class="slider-container">
+    <div class="slider-value font-display" id={`${id}-value`}>
+      {value}%
+    </div>
+
+    <div class="slider-track-container">
+      <input
+        type="range"
+        id={id}
+        name={id}
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        class="slider-input"
+        aria-label={title}
+      />
+      <div class="slider-track">
+        <div class="slider-fill" style={`width: ${value}%`}></div>
+      </div>
+    </div>
+
+    {labels && (
+      <div class="slider-labels">
+        <span class="label-min">{labels.min}</span>
+        <span class="label-max">{labels.max}</span>
+      </div>
+    )}
+  </div>
+</div>
+
+<style>
+  .question-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .question-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .headline-md {
+    color: var(--color-stone-100);
+    margin-bottom: 0.5rem;
+  }
+
+  .subtitle {
+    color: var(--color-stone-400);
+    font-size: 1rem;
+  }
+
+  .slider-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .slider-value {
+    font-size: 4rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--color-copper-400), var(--color-copper-300));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 40px rgba(184, 115, 51, 0.3);
+    transition: transform 0.2s ease;
+  }
+
+  .slider-track-container {
+    position: relative;
+    width: 100%;
+    height: 60px;
+    display: flex;
+    align-items: center;
+  }
+
+  .slider-input {
+    position: absolute;
+    width: 100%;
+    height: 60px;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 10;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .slider-track {
+    position: absolute;
+    width: 100%;
+    height: 8px;
+    background: var(--color-charcoal-700);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .slider-fill {
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      var(--color-copper-600),
+      var(--color-copper-400)
+    );
+    border-radius: 4px;
+    transition: width 0.15s ease-out;
+    position: relative;
+  }
+
+  .slider-fill::after {
+    content: '';
+    position: absolute;
+    right: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    background: var(--color-copper-400);
+    border: 3px solid var(--color-charcoal-900);
+    border-radius: 50%;
+    box-shadow:
+      0 0 20px rgba(184, 115, 51, 0.5),
+      0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .slider-labels {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 0.75rem;
+    color: var(--color-stone-500);
+  }
+
+  /* Touch feedback */
+  .slider-input:active + .slider-track .slider-fill::after {
+    transform: translateY(-50%) scale(1.2);
+    box-shadow:
+      0 0 30px rgba(184, 115, 51, 0.7),
+      0 6px 12px rgba(0, 0, 0, 0.4);
+  }
+</style>
+
+<script>
+  // Handle slider interactions
+  document.querySelectorAll('.question-container[data-question-type="slider"]').forEach(container => {
+    const input = container.querySelector('input[type="range"]') as HTMLInputElement;
+    const valueDisplay = container.querySelector('.slider-value') as HTMLElement;
+    const fill = container.querySelector('.slider-fill') as HTMLElement;
+
+    if (input && valueDisplay && fill) {
+      input.addEventListener('input', () => {
+        const value = parseInt(input.value);
+        valueDisplay.textContent = `${value}%`;
+        fill.style.width = `${value}%`;
+
+        // Haptic feedback on mobile
+        if ('vibrate' in navigator) {
+          navigator.vibrate(10);
+        }
+
+        // Dispatch custom event for state management
+        container.dispatchEvent(new CustomEvent('answer-change', {
+          bubbles: true,
+          detail: { id: input.id, value }
+        }));
+      });
+    }
+  });
+</script>

@@ -1,0 +1,292 @@
+---
+interface Props {
+  score: number;
+  categoryName: string;
+  referralCode: string;
+  shareUrl?: string;
+}
+
+const { score, categoryName, referralCode, shareUrl = 'https://adhd-founder.com/dopamine-roi' } = Astro.props;
+
+// Pre-written share templates per category
+const shareTemplates = {
+  twitter: `Just discovered my Dopamine ROI is ${score}! 🧠⚡\n\nTurns out I'm a "${categoryName}" - which explains so much about how I run my business.\n\nADHD entrepreneurs: take the 2-min quiz 👇`,
+  linkedin: `I just took the Dopamine ROI Calculator - a quick assessment for ADHD entrepreneurs.\n\nMy score: ${score}/100 ("${categoryName}")\n\nIt helped me identify which activities give me energy vs. drain me. Highly recommend for any founder who wants to work WITH their brain, not against it.`,
+  copy: `${score}/100 on the Dopamine ROI Calculator! 🧠 I'm a "${categoryName}"\n\nFind your score: ${shareUrl}?ref=${referralCode}`
+};
+---
+
+<div class="share-container" data-referral-code={referralCode}>
+  <h3 class="share-title">Share Your Results</h3>
+  <p class="share-subtitle">Help other ADHD entrepreneurs discover their Dopamine ROI</p>
+
+  <div class="share-buttons">
+    <!-- Twitter/X -->
+    <button
+      class="share-button twitter"
+      data-platform="twitter"
+      data-text={shareTemplates.twitter}
+      data-url={`${shareUrl}?ref=${referralCode}`}
+    >
+      <svg viewBox="0 0 24 24" fill="currentColor" class="share-icon">
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+      </svg>
+      <span>Post on X</span>
+    </button>
+
+    <!-- LinkedIn -->
+    <button
+      class="share-button linkedin"
+      data-platform="linkedin"
+      data-text={shareTemplates.linkedin}
+      data-url={`${shareUrl}?ref=${referralCode}`}
+    >
+      <svg viewBox="0 0 24 24" fill="currentColor" class="share-icon">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+      </svg>
+      <span>Share on LinkedIn</span>
+    </button>
+
+    <!-- Copy Link -->
+    <button
+      class="share-button copy"
+      data-platform="copy"
+      data-text={shareTemplates.copy}
+    >
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="share-icon">
+        <path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
+      </svg>
+      <span class="copy-text">Copy Link</span>
+    </button>
+  </div>
+
+  <!-- Referral Stats (populated via JS) -->
+  <div class="referral-stats" style="display: none;">
+    <div class="stat">
+      <span class="stat-value" id="referral-clicks">0</span>
+      <span class="stat-label">Link Clicks</span>
+    </div>
+    <div class="stat">
+      <span class="stat-value" id="referral-conversions">0</span>
+      <span class="stat-label">Friends Tested</span>
+    </div>
+  </div>
+</div>
+
+<style>
+  .share-container {
+    width: 100%;
+    text-align: center;
+    padding: 2rem;
+    background: var(--color-charcoal-800);
+    border: 1px solid var(--color-charcoal-700);
+    border-radius: 1rem;
+  }
+
+  .share-title {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-stone-100);
+    margin-bottom: 0.5rem;
+  }
+
+  .share-subtitle {
+    font-size: 0.875rem;
+    color: var(--color-stone-400);
+    margin-bottom: 1.5rem;
+  }
+
+  .share-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+
+  .share-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .share-icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .share-button.twitter {
+    background: #000;
+    color: #fff;
+  }
+
+  .share-button.twitter:hover {
+    background: #1a1a1a;
+    transform: translateY(-2px);
+  }
+
+  .share-button.linkedin {
+    background: #0A66C2;
+    color: #fff;
+  }
+
+  .share-button.linkedin:hover {
+    background: #004182;
+    transform: translateY(-2px);
+  }
+
+  .share-button.copy {
+    background: var(--color-charcoal-700);
+    color: var(--color-stone-200);
+  }
+
+  .share-button.copy:hover {
+    background: var(--color-charcoal-600);
+    transform: translateY(-2px);
+  }
+
+  .share-button.copy.copied {
+    background: var(--color-forest-600);
+    color: #fff;
+  }
+
+  .referral-stats {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-charcoal-700);
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-value {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-copper-400);
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+    color: var(--color-stone-500);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  @media (max-width: 480px) {
+    .share-buttons {
+      flex-direction: column;
+    }
+
+    .share-button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll('.share-container').forEach(container => {
+    const buttons = container.querySelectorAll('.share-button');
+    const referralCode = container.getAttribute('data-referral-code');
+
+    buttons.forEach(button => {
+      button.addEventListener('click', async () => {
+        const platform = button.getAttribute('data-platform');
+        const text = button.getAttribute('data-text') || '';
+        const url = button.getAttribute('data-url') || '';
+
+        // Haptic feedback
+        if ('vibrate' in navigator) {
+          navigator.vibrate(20);
+        }
+
+        switch (platform) {
+          case 'twitter':
+            window.open(
+              `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`,
+              '_blank',
+              'width=550,height=420'
+            );
+            break;
+
+          case 'linkedin':
+            window.open(
+              `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
+              '_blank',
+              'width=550,height=420'
+            );
+            break;
+
+          case 'copy':
+            try {
+              await navigator.clipboard.writeText(text);
+              const copyText = button.querySelector('.copy-text');
+              button.classList.add('copied');
+              if (copyText) copyText.textContent = 'Copied!';
+
+              setTimeout(() => {
+                button.classList.remove('copied');
+                if (copyText) copyText.textContent = 'Copy Link';
+              }, 2000);
+            } catch (err) {
+              console.error('Failed to copy:', err);
+            }
+            break;
+        }
+
+        // Track share event
+        try {
+          await fetch('/api/track-event', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              event: 'share',
+              platform,
+              referralCode
+            })
+          });
+        } catch (err) {
+          // Silent fail - non-critical
+        }
+      });
+    });
+
+    // Load referral stats
+    async function loadReferralStats() {
+      if (!referralCode) return;
+
+      try {
+        const response = await fetch(`/api/referral/${referralCode}`);
+        if (response.ok) {
+          const data = await response.json();
+          const statsContainer = container.querySelector('.referral-stats') as HTMLElement;
+          const clicksEl = container.querySelector('#referral-clicks');
+          const conversionsEl = container.querySelector('#referral-conversions');
+
+          if (data.clicks > 0 || data.conversions > 0) {
+            if (statsContainer) statsContainer.style.display = 'flex';
+            if (clicksEl) clicksEl.textContent = data.clicks.toString();
+            if (conversionsEl) conversionsEl.textContent = data.conversions.toString();
+          }
+        }
+      } catch (err) {
+        // Silent fail
+      }
+    }
+
+    loadReferralStats();
+  });
+</script>

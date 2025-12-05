@@ -1,0 +1,265 @@
+---
+interface Option {
+  value: string;
+  label: string;
+  icon?: string;
+}
+
+interface Props {
+  id: string;
+  title: string;
+  subtitle?: string;
+  options: Option[];
+  selected?: string[];
+  minSelect?: number;
+  maxSelect?: number;
+}
+
+const { id, title, subtitle, options, selected = [], minSelect = 1, maxSelect = 6 } = Astro.props;
+---
+
+<div
+  class="question-container"
+  data-question-type="multiselect"
+  data-question-id={id}
+  data-min-select={minSelect}
+  data-max-select={maxSelect}
+>
+  <div class="question-header">
+    <h2 class="headline-md">{title}</h2>
+    {subtitle && <p class="subtitle">{subtitle}</p>}
+  </div>
+
+  <div class="selection-counter font-mono">
+    <span class="counter-current">0</span> selected
+    {maxSelect < options.length && ` (max ${maxSelect})`}
+  </div>
+
+  <div class="options-grid" role="group" aria-label={title}>
+    {options.map((option) => (
+      <label class={`option-chip ${selected.includes(option.value) ? 'selected' : ''}`}>
+        <input
+          type="checkbox"
+          name={id}
+          value={option.value}
+          checked={selected.includes(option.value)}
+          class="sr-only"
+        />
+        <span class="chip-content">
+          {option.icon && <span class="chip-icon">{option.icon}</span>}
+          <span class="chip-label">{option.label}</span>
+        </span>
+        <span class="chip-check">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <path d="M5 13l4 4L19 7" />
+          </svg>
+        </span>
+      </label>
+    ))}
+  </div>
+</div>
+
+<style>
+  .question-container {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .question-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .headline-md {
+    color: var(--color-stone-100);
+    margin-bottom: 0.5rem;
+  }
+
+  .subtitle {
+    color: var(--color-stone-400);
+    font-size: 1rem;
+  }
+
+  .selection-counter {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-stone-500);
+  }
+
+  .counter-current {
+    color: var(--color-copper-400);
+    font-weight: 600;
+  }
+
+  .options-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  @media (max-width: 640px) {
+    .options-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .option-chip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    background: var(--color-charcoal-800);
+    border: 2px solid var(--color-charcoal-700);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+  }
+
+  .option-chip:hover:not(.disabled) {
+    border-color: var(--color-charcoal-500);
+    transform: translateY(-1px);
+  }
+
+  .option-chip.selected {
+    border-color: var(--color-copper-500);
+    background: linear-gradient(
+      135deg,
+      rgba(184, 115, 51, 0.1),
+      rgba(184, 115, 51, 0.05)
+    );
+  }
+
+  .option-chip.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .option-chip:focus-within {
+    outline: 2px solid var(--color-copper-400);
+    outline-offset: 2px;
+  }
+
+  .chip-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .chip-icon {
+    font-size: 1.25rem;
+  }
+
+  .chip-label {
+    font-weight: 500;
+    color: var(--color-stone-200);
+  }
+
+  .chip-check {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--color-charcoal-600);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+  }
+
+  .chip-check svg {
+    width: 12px;
+    height: 12px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .option-chip.selected .chip-check {
+    background: var(--color-copper-500);
+    border-color: var(--color-copper-500);
+  }
+
+  .option-chip.selected .chip-check svg {
+    opacity: 1;
+    color: var(--color-charcoal-950);
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>
+
+<script>
+  document.querySelectorAll('.question-container[data-question-type="multiselect"]').forEach(container => {
+    const chips = container.querySelectorAll('.option-chip');
+    const counter = container.querySelector('.counter-current') as HTMLElement;
+    const maxSelect = parseInt(container.getAttribute('data-max-select') || '6');
+    const questionId = container.getAttribute('data-question-id');
+
+    function updateCounter() {
+      const selectedCount = container.querySelectorAll('.option-chip.selected').length;
+      if (counter) {
+        counter.textContent = selectedCount.toString();
+      }
+
+      // Disable unselected chips if max reached
+      chips.forEach(chip => {
+        if (!chip.classList.contains('selected') && selectedCount >= maxSelect) {
+          chip.classList.add('disabled');
+        } else {
+          chip.classList.remove('disabled');
+        }
+      });
+    }
+
+    function getSelectedValues(): string[] {
+      return Array.from(container.querySelectorAll('.option-chip.selected input'))
+        .map(input => (input as HTMLInputElement).value);
+    }
+
+    chips.forEach(chip => {
+      chip.addEventListener('click', (e) => {
+        if (chip.classList.contains('disabled')) {
+          e.preventDefault();
+          return;
+        }
+
+        const isSelected = chip.classList.contains('selected');
+        const selectedCount = container.querySelectorAll('.option-chip.selected').length;
+
+        // Toggle if deselecting or if not at max
+        if (isSelected || selectedCount < maxSelect) {
+          chip.classList.toggle('selected');
+
+          // Haptic feedback
+          if ('vibrate' in navigator) {
+            navigator.vibrate(15);
+          }
+
+          updateCounter();
+
+          // Dispatch event
+          container.dispatchEvent(new CustomEvent('answer-change', {
+            bubbles: true,
+            detail: { id: questionId, value: getSelectedValues() }
+          }));
+        }
+      });
+    });
+
+    // Initial counter update
+    updateCounter();
+  });
+</script>
