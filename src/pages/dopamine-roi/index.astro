@@ -6,8 +6,8 @@ const referredBy = Astro.url.searchParams.get('ref');
 ---
 
 <Layout
-  title="Dopamine ROI Calculator"
-  description="Discover which business activities give you energy vs. drain you. A 2-minute assessment for ADHD entrepreneurs."
+  title="Business-Brain-Fit Score | For ADHD Entrepreneurs"
+  description="Discover why some days you're unstoppable and others you can't even open your laptop. A 2-minute assessment that reveals exactly what's draining your ADHD brain."
   image="/dopamine-roi-og.jpg"
 >
   <main class="landing-page">
@@ -20,17 +20,17 @@ const referredBy = Astro.url.searchParams.get('ref');
         </div>
 
         <h1 class="hero-title">
-          Stop Fighting Your<br />
-          <span class="highlight">ADHD Brain</span>
+          You know that feeling when<br />
+          your brain just... <span class="highlight">won't?</span>
         </h1>
 
         <p class="hero-subtitle">
-          Find out why some days you're unstoppable—and others you can't even open your laptop.<br />
-          This 2-minute quiz reveals <em>exactly</em> what's draining you.
+          That weird disconnect where you <em>know</em> what you should be doing,
+          you <em>want</em> to do it, but your brain is like... nope. Not today.
         </p>
 
         <a href="/dopamine-roi/assessment" class="cta-button">
-          <span class="button-text">Find My Energy Leaks</span>
+          <span class="button-text">Get My Brain-Fit Score</span>
           <span class="button-icon">→</span>
         </a>
 
@@ -42,7 +42,7 @@ const referredBy = Astro.url.searchParams.get('ref');
             <span class="avatar">👨‍🎨</span>
           </div>
           <span class="proof-text">
-            <strong>2,847</strong> ADHD founders stopped burning out on the wrong tasks
+            <strong>2,847</strong> ADHD founders stopped working against themselves
           </span>
         </div>
       </div>
@@ -64,33 +64,65 @@ const referredBy = Astro.url.searchParams.get('ref');
       </div>
     </section>
 
+    <!-- The Problem Section (NEW - Emotional Deep-Dive) -->
+    <section class="problem-section">
+      <div class="problem-content">
+        <p class="problem-lead">
+          Maybe you're staring at a blank screen while your brain plays 47 different songs,
+          reminds you about that embarrassing thing from 2003, and suddenly becomes
+          <em>very interested</em> in reorganizing your desk.
+        </p>
+
+        <p class="problem-text">
+          Or maybe it's the opposite—you're hyperfocused on something that doesn't even matter
+          while actual important work sits there judging you.
+        </p>
+
+        <p class="problem-text">
+          Here's the thing: <strong>This isn't a character flaw.</strong> It's not laziness.
+          It's not that you "need more discipline." Your brain literally works differently—and
+          that difference can be your biggest asset or your biggest obstacle, depending on
+          whether you're working <em>with</em> it or <em>against</em> it.
+        </p>
+
+        <div class="problem-highlight">
+          <span class="highlight-icon">💡</span>
+          <p>
+            <strong>The problem isn't your brain.</strong><br />
+            It's that nobody taught you how YOUR brain actually wants to work.
+          </p>
+        </div>
+      </div>
+    </section>
+
     <!-- What You'll Learn Section -->
     <section class="learn-section">
       <h2 class="section-title">What You'll Discover</h2>
+      <p class="section-subtitle">In 2 minutes, you'll finally understand why your brain does what it does</p>
 
       <div class="learn-grid">
         <div class="learn-card">
           <div class="learn-icon">📊</div>
-          <h3>Your Dopamine ROI Score</h3>
-          <p>A single number that tells you: are you building your business—or slowly burning out?</p>
+          <h3>Your Brain-Fit Score</h3>
+          <p>A single number that tells you: is your business setup working WITH your brain—or fighting against it?</p>
         </div>
 
         <div class="learn-card">
           <div class="learn-icon">🎯</div>
           <h3>Your Founder Type</h3>
-          <p>Are you a Cash Engine, Delegate Zone, Kill Zone, or Profitable Chaos? Each has a different fix.</p>
+          <p>Are you The Synced, The Hustler, The Fighter, or The Chaos Creator? Each needs a completely different approach.</p>
         </div>
 
         <div class="learn-card">
           <div class="learn-icon">🗺️</div>
-          <h3>What To Do Next</h3>
-          <p>Not "try meditation." Real changes based on YOUR specific patterns.</p>
+          <h3>Your Personal Fix</h3>
+          <p>Not generic "try meditation" advice. Actual changes based on YOUR specific brain patterns and business stage.</p>
         </div>
 
         <div class="learn-card">
           <div class="learn-icon">⚡</div>
-          <h3>Your Energy Vampires</h3>
-          <p>The 2-3 tasks secretly draining you. You already know them—this confirms it.</p>
+          <h3>Your Hidden Drains</h3>
+          <p>The 2-3 tasks secretly sabotaging your energy. You already feel them—this confirms what they are and what to do about it.</p>
         </div>
       </div>
     </section>
@@ -103,26 +135,26 @@ const referredBy = Astro.url.searchParams.get('ref');
       <div class="categories-grid">
         <div class="category-preview" style="--cat-color: #10B981">
           <div class="category-score">70-100</div>
-          <h3>Cash Engine</h3>
-          <p>You cracked it. Your brain and business finally speak the same language.</p>
+          <h3>The Synced</h3>
+          <p>Your brain and business speak the same language. Tasks feel like play. This is what flow state looks like at scale.</p>
         </div>
 
         <div class="category-preview" style="--cat-color: #3B82F6">
           <div class="category-score">40-69</div>
-          <h3>Delegate Zone</h3>
-          <p>So close. One or two changes could double your output without extra hours.</p>
+          <h3>The Hustler</h3>
+          <p>Winning, but at what cost? You're making it work through sheer force of will. Small tweaks could change everything.</p>
         </div>
 
         <div class="category-preview" style="--cat-color: #F59E0B">
           <div class="category-score">20-39</div>
-          <h3>Kill Zone</h3>
-          <p>Working hard but swimming upstream. Your systems are fighting your brain.</p>
+          <h3>The Fighter</h3>
+          <p>Every day feels like pushing a boulder uphill. Not because you're weak—because you're fighting against your own wiring.</p>
         </div>
 
         <div class="category-preview" style="--cat-color: #EF4444">
           <div class="category-score">0-19</div>
-          <h3>Profitable Chaos</h3>
-          <p>Making money despite yourself. Imagine what happens when you stop leaking energy.</p>
+          <h3>The Chaos Creator</h3>
+          <p>Making money despite the chaos. Imagine what happens when you stop accidentally sabotaging yourself.</p>
         </div>
       </div>
     </section>
@@ -157,6 +189,47 @@ const referredBy = Astro.url.searchParams.get('ref');
           <div class="step-content">
             <h3>Get Your Fix</h3>
             <p>Specific changes to try this week. Not "someday maybe" advice.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Objection Handling / Why This Is Different -->
+    <section class="different-section">
+      <div class="different-content">
+        <h2 class="different-title">This isn't another "productivity hack"</h2>
+
+        <div class="different-grid">
+          <div class="different-card">
+            <div class="different-icon">❌</div>
+            <div class="different-text">
+              <h3>Not generic advice</h3>
+              <p>"Try meditation" and "make a to-do list" don't cut it when your brain is wired differently.</p>
+            </div>
+          </div>
+
+          <div class="different-card">
+            <div class="different-icon">❌</div>
+            <div class="different-text">
+              <h3>Not a personality test</h3>
+              <p>This isn't about whether you're an INTJ. It's about how YOUR brain processes work and energy.</p>
+            </div>
+          </div>
+
+          <div class="different-card">
+            <div class="different-icon">❌</div>
+            <div class="different-text">
+              <h3>Not "more discipline"</h3>
+              <p>Willpower is finite and ADHD brains burn through it faster. The fix isn't trying harder.</p>
+            </div>
+          </div>
+
+          <div class="different-card highlight-card">
+            <div class="different-icon">✓</div>
+            <div class="different-text">
+              <h3>Built for ADHD brains</h3>
+              <p>By a founder who was late-diagnosed at 51 and finally stopped fighting himself.</p>
+            </div>
           </div>
         </div>
       </div>
@@ -207,15 +280,23 @@ const referredBy = Astro.url.searchParams.get('ref');
     <!-- Final CTA -->
     <section class="final-cta">
       <div class="cta-container">
-        <h2>Ready to Work With Your Brain?</h2>
-        <p>2 minutes. No fluff. Immediate clarity.</p>
+        <p class="cta-leadup">You've scrolled this far. That's your brain telling you something.</p>
+
+        <h2>Find Out Why Some Days<br />You're Unstoppable</h2>
+        <p class="cta-subtext">And others you can't even open your laptop.</p>
 
         <a href="/dopamine-roi/assessment" class="cta-button large">
-          <span class="button-text">Show Me What's Draining Me</span>
+          <span class="button-text">Get My Brain-Fit Score</span>
           <span class="button-icon">→</span>
         </a>
 
-        <span class="cta-note">Free forever. Results hit your inbox instantly.</span>
+        <div class="cta-reassurance">
+          <span class="reassurance-item">⏱️ 2 minutes</span>
+          <span class="reassurance-divider">•</span>
+          <span class="reassurance-item">🔓 Free forever</span>
+          <span class="reassurance-divider">•</span>
+          <span class="reassurance-item">📧 Results in your inbox instantly</span>
+        </div>
       </div>
     </section>
 
@@ -484,6 +565,74 @@ const referredBy = Astro.url.searchParams.get('ref');
     letter-spacing: 0.05em;
   }
 
+  /* Problem Section (NEW) */
+  .problem-section {
+    background: linear-gradient(180deg, var(--color-charcoal-950), var(--color-charcoal-900));
+    padding: 4rem 1.5rem;
+  }
+
+  .problem-content {
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .problem-lead {
+    font-size: 1.375rem;
+    line-height: 1.7;
+    color: var(--color-stone-200);
+    margin-bottom: 1.5rem;
+  }
+
+  .problem-lead em {
+    color: var(--color-copper-400);
+    font-style: italic;
+  }
+
+  .problem-text {
+    font-size: 1.0625rem;
+    line-height: 1.75;
+    color: var(--color-stone-400);
+    margin-bottom: 1.25rem;
+  }
+
+  .problem-text strong {
+    color: var(--color-stone-200);
+  }
+
+  .problem-text em {
+    color: var(--color-stone-300);
+    font-style: italic;
+  }
+
+  .problem-highlight {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    padding: 1.5rem;
+    margin-top: 2rem;
+    background: linear-gradient(135deg, rgba(184, 115, 51, 0.08), rgba(184, 115, 51, 0.03));
+    border: 1px solid rgba(184, 115, 51, 0.3);
+    border-radius: 0.75rem;
+    border-left: 3px solid var(--color-copper-500);
+  }
+
+  .highlight-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+
+  .problem-highlight p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-stone-300);
+    margin: 0;
+  }
+
+  .problem-highlight strong {
+    color: var(--color-stone-100);
+    font-weight: 600;
+  }
+
   /* Sections */
   section {
     padding: 4rem 1.5rem;
@@ -697,6 +846,91 @@ const referredBy = Astro.url.searchParams.get('ref');
     margin: 0.5rem 0 0.5rem 23px;
   }
 
+  /* Different Section (Objection Handling) */
+  .different-section {
+    background: var(--color-charcoal-950);
+    padding: 4rem 1.5rem;
+  }
+
+  .different-content {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .different-title {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--color-stone-100);
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .different-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+
+  @media (max-width: 640px) {
+    .different-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .different-card {
+    display: flex;
+    gap: 1rem;
+    padding: 1.25rem;
+    background: var(--color-charcoal-900);
+    border: 1px solid var(--color-charcoal-800);
+    border-radius: 0.75rem;
+    transition: all 0.2s ease;
+  }
+
+  .different-card:hover {
+    border-color: var(--color-charcoal-700);
+    transform: translateY(-2px);
+  }
+
+  .different-card.highlight-card {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(16, 185, 129, 0.03));
+    border-color: rgba(16, 185, 129, 0.4);
+  }
+
+  .different-icon {
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    opacity: 0.7;
+  }
+
+  .different-card.highlight-card .different-icon {
+    color: var(--color-forest-500);
+    opacity: 1;
+  }
+
+  .different-text h3 {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-stone-200);
+    margin-bottom: 0.25rem;
+  }
+
+  .different-text p {
+    font-size: 0.875rem;
+    color: var(--color-stone-500);
+    line-height: 1.5;
+  }
+
+  .different-card.highlight-card .different-text h3 {
+    color: var(--color-forest-400);
+  }
+
+  .different-card.highlight-card .different-text p {
+    color: var(--color-stone-400);
+  }
+
   /* For Section */
   .for-container {
     display: grid;
@@ -766,32 +1000,82 @@ const referredBy = Astro.url.searchParams.get('ref');
     background: linear-gradient(180deg, var(--color-charcoal-900), var(--color-charcoal-950));
     text-align: center;
     padding: 5rem 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .final-cta::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 800px;
+    height: 400px;
+    background: radial-gradient(ellipse, rgba(184, 115, 51, 0.08), transparent 70%);
+    pointer-events: none;
   }
 
   .cta-container {
-    max-width: 500px;
+    max-width: 560px;
     margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cta-leadup {
+    font-size: 1rem;
+    color: var(--color-copper-400);
+    font-style: italic;
+    margin-bottom: 1.5rem;
+    opacity: 0.9;
   }
 
   .cta-container h2 {
     font-family: var(--font-display);
-    font-size: 2rem;
+    font-size: clamp(1.75rem, 5vw, 2.25rem);
     font-weight: 700;
     color: var(--color-stone-100);
-    margin-bottom: 0.75rem;
+    line-height: 1.2;
+    margin-bottom: 0.5rem;
   }
 
-  .cta-container p {
+  .cta-subtext {
     font-size: 1.125rem;
     color: var(--color-stone-400);
     margin-bottom: 2rem;
   }
 
-  .cta-note {
-    display: block;
-    margin-top: 1rem;
-    font-size: 0.875rem;
-    color: var(--color-stone-600);
+  .cta-reassurance {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.75rem;
+    margin-top: 1.5rem;
+    font-size: 0.8125rem;
+    color: var(--color-stone-500);
+  }
+
+  .reassurance-item {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .reassurance-divider {
+    color: var(--color-charcoal-700);
+  }
+
+  @media (max-width: 480px) {
+    .cta-reassurance {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .reassurance-divider {
+      display: none;
+    }
   }
 
   /* Footer */

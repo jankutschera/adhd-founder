@@ -117,15 +117,36 @@ const ogImage = `/api/og-image?score=${score}&category=${category.id}`;
         />
       </section>
 
-      <!-- CTA Section -->
+      <!-- CTA Section - Course Upsell -->
       <section class="cta-section">
         <div class="cta-card">
-          <h3 class="cta-title">Want the Full Playbook?</h3>
-          <p class="cta-description">
-            Get the complete <strong>{category.name} Optimization Guide</strong> with advanced strategies, templates, and a 30-day implementation plan.
-          </p>
-          <a href="/newsletter?source=dopamine-roi" class="cta-button">
-            <span>Get the Free Guide</span>
+          <span class="cta-badge">🎯 Want the Full Chaos Audit Method?</span>
+          <h3 class="cta-title">The Complete 4-Module Course</h3>
+          <ul class="course-features">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="check-icon"><path d="M5 13l4 4L19 7" /></svg>
+              <span>Step-by-step Chaos Audit Framework</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="check-icon"><path d="M5 13l4 4L19 7" /></svg>
+              <span>Energy/Impact Matrix Templates</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="check-icon"><path d="M5 13l4 4L19 7" /></svg>
+              <span>Cash Engine Identification Workbook</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="check-icon"><path d="M5 13l4 4L19 7" /></svg>
+              <span>2-Week Implementation Guide</span>
+            </li>
+          </ul>
+          <div class="pricing-row">
+            <span class="price-original">Regular €97</span>
+            <span class="price-arrow">→</span>
+            <span class="price-launch">Launch Price: €47</span>
+          </div>
+          <a href="/chaos-audit-course?source=dopamine-roi-results" class="cta-button">
+            <span>Get It for €47</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="cta-icon">
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
@@ -308,6 +329,18 @@ const ogImage = `/api/og-image?score=${score}&category=${category.id}`;
     pointer-events: none;
   }
 
+  .cta-badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-copper-400);
+    background: rgba(184, 115, 51, 0.15);
+    border-radius: 2rem;
+    margin-bottom: 1rem;
+    position: relative;
+  }
+
   .cta-title {
     font-family: var(--font-display);
     font-size: 1.5rem;
@@ -326,6 +359,57 @@ const ogImage = `/api/og-image?score=${score}&category=${category.id}`;
   }
 
   .cta-description strong {
+    color: var(--color-copper-400);
+  }
+
+  .course-features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.5rem 0;
+    text-align: left;
+    position: relative;
+  }
+
+  .course-features li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 0;
+    color: var(--color-stone-300);
+    font-size: 0.9375rem;
+  }
+
+  .check-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    color: var(--color-copper-400);
+  }
+
+  .pricing-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+    position: relative;
+  }
+
+  .price-original {
+    font-size: 0.875rem;
+    color: var(--color-stone-500);
+    text-decoration: line-through;
+  }
+
+  .price-arrow {
+    color: var(--color-stone-600);
+    font-size: 0.875rem;
+  }
+
+  .price-launch {
+    font-size: 1rem;
+    font-weight: 700;
     color: var(--color-copper-400);
   }
 
