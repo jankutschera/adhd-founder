@@ -8,9 +8,9 @@ const { currentStep, totalSteps } = Astro.props;
 const progress = (currentStep / totalSteps) * 100;
 ---
 
-<div class="progress-container">
+<div class="progress-container progress-bar">
   <div class="progress-info">
-    <span class="step-counter font-mono">
+    <span class="step-counter font-mono progress-text">
       Question {currentStep} of {totalSteps}
     </span>
     <span class="time-estimate">

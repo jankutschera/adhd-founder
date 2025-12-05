@@ -114,37 +114,38 @@ export const POST: APIRoute = async ({ request }) => {
     // Generate unique referral code
     const referralCode = nanoid(8);
 
-    // Save to Supabase
-    const { data, error } = await supabase
-      .from('assessments')
-      .insert({
-        email,
-        answers,
-        score,
-        score_breakdown: breakdown,
-        category: category.id,
-        referral_code: referralCode,
-        referred_by: referredBy || null,
-      })
-      .select()
-      .single();
-
-    if (error) {
-      console.error('Supabase error:', error);
-      return new Response(
-        JSON.stringify({ error: 'Failed to save assessment' }),
-        { status: 500, headers: { 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Update referral conversion if referred by someone
-    if (referredBy) {
-      await supabase
-        .from('referral_clicks')
+    // Save to Supabase (if configured)
+    if (supabase) {
+      const { data, error } = await supabase
+        .from('assessments')
         .insert({
-          referral_code: referredBy,
-          converted: true
-        });
+          email,
+          answers,
+          score,
+          score_breakdown: breakdown,
+          category: category.id,
+          referral_code: referralCode,
+          referred_by: referredBy || null,
+        })
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Supabase error:', error);
+        // Continue anyway - we still want to show results
+      }
+
+      // Update referral conversion if referred by someone
+      if (referredBy) {
+        await supabase
+          .from('referral_clicks')
+          .insert({
+            referral_code: referredBy,
+            converted: true
+          });
+      }
+    } else {
+      console.warn('Supabase not configured - assessment not saved to database');
     }
 
     // Send results email (non-blocking)

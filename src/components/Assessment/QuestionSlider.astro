@@ -7,16 +7,33 @@ interface Props {
   max: number;
   step: number;
   value?: number;
-  labels?: {
-    min: string;
-    max: string;
-  };
+  leftLabel?: string;
+  rightLabel?: string;
+  showPercent?: boolean;
 }
 
-const { id, title, subtitle, min, max, step, value = Math.floor((max - min) / 2), labels } = Astro.props;
+const {
+  id,
+  title,
+  subtitle,
+  min,
+  max,
+  step,
+  value = Math.floor((max + min) / 2),
+  leftLabel,
+  rightLabel,
+  showPercent = max === 100
+} = Astro.props;
 ---
 
-<div class="question-container" data-question-type="slider" data-question-id={id}>
+<div
+  class="question-container"
+  data-question-type="slider"
+  data-question-id={id}
+  data-min={min}
+  data-max={max}
+  data-show-percent={showPercent}
+>
   <div class="question-header">
     <h2 class="headline-md">{title}</h2>
     {subtitle && <p class="subtitle">{subtitle}</p>}
@@ -24,7 +41,7 @@ const { id, title, subtitle, min, max, step, value = Math.floor((max - min) / 2)
 
   <div class="slider-container">
     <div class="slider-value font-display" id={`${id}-value`}>
-      {value}%
+      {showPercent ? `${value}%` : value}
     </div>
 
     <div class="slider-track-container">
@@ -40,14 +57,14 @@ const { id, title, subtitle, min, max, step, value = Math.floor((max - min) / 2)
         aria-label={title}
       />
       <div class="slider-track">
-        <div class="slider-fill" style={`width: ${value}%`}></div>
+        <div class="slider-fill" style={`width: ${((value - min) / (max - min)) * 100}%`}></div>
       </div>
     </div>
 
-    {labels && (
+    {(leftLabel || rightLabel) && (
       <div class="slider-labels">
-        <span class="label-min">{labels.min}</span>
-        <span class="label-max">{labels.max}</span>
+        <span class="label-min">{leftLabel}</span>
+        <span class="label-max">{rightLabel}</span>
       </div>
     )}
   </div>
@@ -172,11 +189,21 @@ const { id, title, subtitle, min, max, step, value = Math.floor((max - min) / 2)
     const valueDisplay = container.querySelector('.slider-value') as HTMLElement;
     const fill = container.querySelector('.slider-fill') as HTMLElement;
 
+    // Read configuration from data attributes
+    const min = parseFloat(container.getAttribute('data-min') || '0');
+    const max = parseFloat(container.getAttribute('data-max') || '100');
+    const showPercent = container.getAttribute('data-show-percent') === 'true';
+
     if (input && valueDisplay && fill) {
       input.addEventListener('input', () => {
         const value = parseInt(input.value);
-        valueDisplay.textContent = `${value}%`;
-        fill.style.width = `${value}%`;
+
+        // Display value with or without percent based on config
+        valueDisplay.textContent = showPercent ? `${value}%` : `${value}`;
+
+        // Calculate fill width normalized to min/max range
+        const fillPercent = ((value - min) / (max - min)) * 100;
+        fill.style.width = `${fillPercent}%`;
 
         // Haptic feedback on mobile
         if ('vibrate' in navigator) {

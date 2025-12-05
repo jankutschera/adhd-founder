@@ -71,7 +71,7 @@ const totalSteps = questions.length + 1; // +1 for email capture
             title="Which activities drain your energy?"
             subtitle="Select all that apply - be honest!"
             options={questions[2].options}
-            maxSelections={5}
+            maxSelect={5}
           />
         </div>
 
@@ -82,7 +82,7 @@ const totalSteps = questions.length + 1; // +1 for email capture
             title="Which activities put you in flow state?"
             subtitle="These are your dopamine gold mines"
             options={questions[3].options}
-            maxSelections={5}
+            maxSelect={5}
           />
         </div>
 
@@ -125,6 +125,7 @@ const totalSteps = questions.length + 1; // +1 for email capture
         <!-- Question 8: Email Capture -->
         <div class="question-step" data-step="8" style="display: none;">
           <EmailCapture
+            id="email"
             title="Almost there! Where should we send your results?"
             subtitle="Get your personalized Dopamine ROI report + action plan"
           />
