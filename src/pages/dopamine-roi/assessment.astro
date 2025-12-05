@@ -137,6 +137,7 @@ const totalSteps = questions.length + 1; // +1 for email capture
           showBack={false}
           showSkip={false}
           nextLabel="Let's Go"
+          nextDisabled={false}
         />
       </div>
     </div>
@@ -442,19 +443,20 @@ const totalSteps = questions.length + 1; // +1 for email capture
     await submitAssessment();
   }) as EventListener);
 
-  document.addEventListener('nav-back', () => {
-    goToStep(state.currentStep - 1);
-  });
+  // Listen for navigation actions from NavigationButtons component
+  document.addEventListener('nav-action', ((e: CustomEvent) => {
+    const action = e.detail?.action;
 
-  document.addEventListener('nav-next', () => {
-    if (state.currentStep < totalSteps) {
+    if (action === 'back') {
+      goToStep(state.currentStep - 1);
+    } else if (action === 'next') {
+      if (state.currentStep < totalSteps) {
+        goToStep(state.currentStep + 1);
+      }
+    } else if (action === 'skip') {
       goToStep(state.currentStep + 1);
     }
-  });
-
-  document.addEventListener('nav-skip', () => {
-    goToStep(state.currentStep + 1);
-  });
+  }) as EventListener);
 
   async function submitAssessment() {
     try {
