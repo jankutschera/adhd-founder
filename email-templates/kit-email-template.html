@@ -59,6 +59,39 @@
       line-height: inherit;
     }
 
+    /* Content styling */
+    .message-content p {
+      margin: 0 0 20px 0;
+      font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: #b8a890;
+    }
+    .message-content h1, .message-content h2, .message-content h3 {
+      font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
+      color: #f5f2ed;
+      margin: 0 0 16px 0;
+    }
+    .message-content h1 { font-size: 28px; }
+    .message-content h2 { font-size: 22px; }
+    .message-content h3 { font-size: 18px; }
+    .message-content a {
+      color: #b87333;
+      text-decoration: underline;
+    }
+    .message-content strong {
+      color: #f5f2ed;
+    }
+    .message-content ul, .message-content ol {
+      margin: 0 0 20px 0;
+      padding-left: 24px;
+      color: #b8a890;
+    }
+    .message-content li {
+      margin-bottom: 8px;
+      line-height: 1.6;
+    }
+
     /* Mobile responsive */
     @media only screen and (max-width: 600px) {
       .mobile-padding { padding-left: 20px !important; padding-right: 20px !important; }
@@ -78,11 +111,6 @@
 </head>
 <body id="body" style="margin: 0; padding: 0; word-spacing: normal; background-color: #0a0a0a;" class="dark-mode-bg">
   <div role="article" aria-roledescription="email" lang="en" style="text-size-adjust: 100%; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; background-color: #0a0a0a;" class="dark-mode-bg">
-
-    <!-- Preheader (hidden preview text) -->
-    <div style="display: none; max-height: 0; overflow: hidden; mso-hide: all;">
-      {{ preview_text }} &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
-    </div>
 
     <!-- Main Container -->
     <table role="presentation" style="width: 100%; border: none; border-spacing: 0; background-color: #0a0a0a;" class="dark-mode-bg">
@@ -110,59 +138,10 @@
               <td>
                 <table role="presentation" style="width: 100%; border: none; border-spacing: 0; background-color: #141414; border: 1px solid #1f1f1f; border-radius: 16px;">
                   <tr>
-                    <td style="padding: 40px 32px;" class="mobile-padding">
+                    <td style="padding: 40px 32px;" class="mobile-padding message-content">
 
-                      <!-- Greeting -->
-                      <h1 style="margin: 0 0 24px 0; font-family: 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 32px; font-weight: 700; line-height: 1.2; color: #f5f2ed;" class="dark-mode-text">
-                        Hey {{ subscriber.first_name | default: "there" }},
-                      </h1>
-
-                      <!-- Main Content Area -->
-                      <!-- ====================================
-                           EDIT YOUR EMAIL CONTENT BELOW
-                           ==================================== -->
-
-                      <p style="margin: 0 0 20px 0; font-family: 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 1.7; color: #b8a890;">
-                        Your email content goes here. Write like you're talking to a fellow ADHD entrepreneur who gets it.
-                      </p>
-
-                      <p style="margin: 0 0 20px 0; font-family: 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 1.7; color: #b8a890;">
-                        Keep paragraphs short. ADHD brains scan before they read.
-                      </p>
-
-                      <!-- Highlight Box (optional - use for important info) -->
-                      <div style="margin: 28px 0; padding: 20px 24px; background-color: #0a0a0a; border-left: 4px solid #b87333; border-radius: 0 8px 8px 0;">
-                        <p style="margin: 0; font-family: 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 15px; line-height: 1.6; color: #f5f2ed;">
-                          <strong style="color: #cd8544;">💡 Key insight:</strong> Use this box for the one thing you want them to remember.
-                        </p>
-                      </div>
-
-                      <p style="margin: 0 0 28px 0; font-family: 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 1.7; color: #b8a890;">
-                        One more paragraph before the CTA. Build anticipation.
-                      </p>
-
-                      <!-- Primary CTA Button -->
-                      <table role="presentation" style="width: 100%; border: none; border-spacing: 0;">
-                        <tr>
-                          <td style="padding: 0;">
-                            <!--[if mso]>
-                            <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{{ cta_url }}" style="height:52px;v-text-anchor:middle;width:100%;" arcsize="15%" fillcolor="#b87333">
-                              <w:anchorlock/>
-                              <center style="color:#0a0a0a;font-family:'Segoe UI',sans-serif;font-size:16px;font-weight:bold;">CTA Button Text →</center>
-                            </v:roundrect>
-                            <![endif]-->
-                            <!--[if !mso]><!-->
-                            <a href="{{ cta_url }}" style="display: block; padding: 16px 32px; font-family: 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 700; text-align: center; text-decoration: none; color: #0a0a0a; background-color: #b87333; border-radius: 8px; transition: background-color 0.2s;">
-                              CTA Button Text →
-                            </a>
-                            <!--<![endif]-->
-                          </td>
-                        </tr>
-                      </table>
-
-                      <!-- ====================================
-                           END EDITABLE CONTENT
-                           ==================================== -->
+                      <!-- Kit.com Message Content Variable -->
+                      {{ message_content }}
 
                     </td>
                   </tr>
@@ -202,13 +181,13 @@
                 <table role="presentation" style="margin: 0 auto 16px auto; border: none; border-spacing: 0;">
                   <tr>
                     <td style="padding: 0 8px;">
-                      <a href="https://twitter.com/adhdfounder" style="display: inline-block; padding: 8px; background-color: #1f1f1f; border-radius: 6px; text-decoration: none;">
-                        <img src="https://adhd-founder.com/email-icons/x.png" alt="X" width="16" height="16" style="display: block;">
+                      <a href="https://twitter.com/adhdfounder" style="display: inline-block; padding: 8px; background-color: #1f1f1f; border-radius: 6px; text-decoration: none; color: #9c8b70; font-size: 14px;">
+                        𝕏
                       </a>
                     </td>
                     <td style="padding: 0 8px;">
-                      <a href="https://linkedin.com/in/jankutschera" style="display: inline-block; padding: 8px; background-color: #1f1f1f; border-radius: 6px; text-decoration: none;">
-                        <img src="https://adhd-founder.com/email-icons/linkedin.png" alt="LinkedIn" width="16" height="16" style="display: block;">
+                      <a href="https://linkedin.com/in/jankutschera" style="display: inline-block; padding: 8px; background-color: #1f1f1f; border-radius: 6px; text-decoration: none; color: #9c8b70; font-size: 14px;">
+                        in
                       </a>
                     </td>
                   </tr>
@@ -219,14 +198,14 @@
                   You're receiving this because you joined the ADHD Founder community.
                 </p>
                 <p style="margin: 0 0 16px 0; font-family: 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 12px; color: #9c8b70;">
-                  <a href="{{ address }}" style="color: #9c8b70; text-decoration: underline;">Our address</a>
+                  {{ address }}
                 </p>
 
                 <!-- Unsubscribe -->
                 <p style="margin: 0; font-family: 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 11px; color: #525252;">
                   <a href="{{ unsubscribe_url }}" style="color: #525252; text-decoration: underline;">Unsubscribe</a>
                   &nbsp;·&nbsp;
-                  <a href="{{ preferences_url }}" style="color: #525252; text-decoration: underline;">Update preferences</a>
+                  <a href="{{ subscriber_preferences_url }}" style="color: #525252; text-decoration: underline;">Update preferences</a>
                 </p>
               </td>
             </tr>
