@@ -179,13 +179,31 @@ async function sendResultsEmail(email: string, score: number, category: any, ref
 
 export const POST: APIRoute = async ({ request }) => {
   try {
-    const body = await request.json();
+    // Parse request body
+    let body;
+    try {
+      body = await request.json();
+    } catch (parseError) {
+      console.error('JSON parse error:', parseError);
+      return new Response(
+        JSON.stringify({ error: 'Invalid request format' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
     const { email, answers, referredBy } = body;
 
     // Validate required fields
-    if (!email || !answers) {
+    if (!email) {
       return new Response(
-        JSON.stringify({ error: 'Email and answers are required' }),
+        JSON.stringify({ error: 'Email address is required' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    if (!answers) {
+      return new Response(
+        JSON.stringify({ error: 'Assessment answers are required' }),
         { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }
@@ -194,58 +212,92 @@ export const POST: APIRoute = async ({ request }) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return new Response(
-        JSON.stringify({ error: 'Invalid email format' }),
+        JSON.stringify({ error: 'Please enter a valid email address' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Validate answers object
+    if (typeof answers !== 'object' || Object.keys(answers).length === 0) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid assessment data' }),
         { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
     // Calculate score
-    const score = calculateScore(answers);
-    const breakdown = getScoreBreakdown(answers);
-    const category = getCategoryByScore(score);
+    let score, breakdown, category;
+    try {
+      score = calculateScore(answers);
+      breakdown = getScoreBreakdown(answers);
+      category = getCategoryByScore(score);
+    } catch (calcError) {
+      console.error('Score calculation error:', calcError);
+      return new Response(
+        JSON.stringify({ error: 'Failed to calculate results. Please ensure all questions are answered.' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
 
     // Generate unique referral code
     const referralCode = nanoid(8);
 
     // Save to Supabase (if configured)
     if (supabase) {
-      const { data, error } = await supabase
-        .from('assessments')
-        .insert({
-          email,
-          answers,
-          score,
-          score_breakdown: breakdown,
-          category: category.id,
-          referral_code: referralCode,
-          referred_by: referredBy || null,
-        })
-        .select()
-        .single();
+      try {
+        const { data, error } = await supabase
+          .from('assessments')
+          .insert({
+            email,
+            answers,
+            score,
+            score_breakdown: breakdown,
+            category: category.id,
+            referral_code: referralCode,
+            referred_by: referredBy || null,
+          })
+          .select()
+          .single();
 
-      if (error) {
-        console.error('Supabase error:', error);
-        // Continue anyway - we still want to show results
+        if (error) {
+          console.error('Supabase error:', error);
+          // Continue anyway - we still want to show results even if DB save fails
+          // This ensures the user experience isn't broken by DB issues
+        }
+      } catch (dbError) {
+        console.error('Database error:', dbError);
+        // Log but continue - user still gets their results
       }
 
       // Update referral conversion if referred by someone
       if (referredBy) {
-        await supabase
-          .from('referral_clicks')
-          .insert({
-            referral_code: referredBy,
-            converted: true
-          });
+        try {
+          await supabase
+            .from('referral_clicks')
+            .insert({
+              referral_code: referredBy,
+              converted: true
+            });
+        } catch (refError) {
+          console.error('Referral tracking error:', refError);
+          // Continue - don't break user flow for tracking issues
+        }
       }
     } else {
       console.warn('Supabase not configured - assessment not saved to database');
     }
 
     // Send results email via Resend (non-blocking)
-    sendResultsEmail(email, score, category, referralCode).catch(console.error);
+    // Failures here don't affect the user experience - they still get their results page
+    sendResultsEmail(email, score, category, referralCode).catch(err => {
+      console.error('Email sending failed (non-critical):', err);
+    });
 
     // Subscribe to Kit.com for nurture sequences (non-blocking)
-    subscribeToKit(email, score, category.id).catch(console.error);
+    // Failures here don't affect the user experience
+    subscribeToKit(email, score, category.id).catch(err => {
+      console.error('Kit subscription failed (non-critical):', err);
+    });
 
     return new Response(
       JSON.stringify({
@@ -261,8 +313,17 @@ export const POST: APIRoute = async ({ request }) => {
     );
   } catch (err) {
     console.error('Submit assessment error:', err);
+
+    // Return user-friendly error message
+    const errorMessage = err instanceof Error
+      ? err.message
+      : 'An unexpected error occurred. Please try again.';
+
     return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
+      JSON.stringify({
+        error: errorMessage,
+        details: 'If this problem persists, please contact support.'
+      }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
     );
   }
